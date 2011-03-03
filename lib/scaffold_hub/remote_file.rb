@@ -18,10 +18,8 @@ module ScaffoldHub
           if resp.code.to_i == 200
             resp.body
           elsif resp.code.to_i == 404
-            p '404'
             raise NotFoundException.new(url)
           else
-            p 'other'
             raise NetworkErrorException.new(url)
           end
         end

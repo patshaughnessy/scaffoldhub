@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
 
-require 'scaffold_hub/version'
+require 'scaffold_hub'
 
 Gem::Specification.new do |s|
   s.name        = "scaffold_hub"

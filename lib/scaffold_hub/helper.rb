@@ -1,13 +1,15 @@
 module ScaffoldHub
   module Helper
+
     def each_template_file(type)
       begin
-        scaffold_spec_file = ScaffoldHub::SpecFile.new(options[:scaffold], options[:local])
+        scaffold_spec_location = ScaffoldHub::SpecLocation.new(options[:scaffold], options[:local])
+        scaffold_spec_file = ScaffoldHub::SpecFile.new(scaffold_spec_location.location, options[:local])
         scaffold_spec_file.select_files(type).each do |file_spec|
           yield download_one_file(file_spec)
         end
       rescue Errno::ENOENT, ScaffoldHub::NotFoundException => e
-        say_status :error, "Cound not find file #{e.message}", :red
+        say_status :error, "HTTP 404 not found error for #{e.message}", :red
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
              Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
         say_status :error, "Network error downloading #{e.message}.", :red

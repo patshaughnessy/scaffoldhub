@@ -1,13 +1,13 @@
 module ScaffoldHub
   class SpecFile < RemoteFile
 
-    def initialize(scaffold, local)
-      @scaffold = scaffold
+    def initialize(location, local)
+      @location = location
       @local    = local
     end
 
     def url
-      url = "http://scaffoldhub.org/scaffolds/#{@scaffold}/#{@scaffold}.scaffoldspec"
+      url = @location
     end
 
     def select_files(type)
@@ -22,7 +22,7 @@ module ScaffoldHub
     protected
 
     def load_local
-      parse(File.new(@scaffold).read)
+      parse(File.new(@location).read)
     end
 
     def load_remote

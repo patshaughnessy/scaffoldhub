@@ -1,8 +1,3 @@
-require 'scaffold_hub/remote_file'
-require 'scaffold_hub/spec_file'
-require 'scaffold_hub/template_file'
-require 'scaffold_hub/helper'
-
 require 'rails/generators/rails/scaffold/scaffold_generator'
 
 class ScaffoldHubGenerator < Rails::Generators::ScaffoldGenerator
