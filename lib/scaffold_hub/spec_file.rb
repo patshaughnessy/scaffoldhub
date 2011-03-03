@@ -6,16 +6,17 @@ module ScaffoldHub
       @local    = local
     end
 
-    def load
+    def url
+      url = "http://scaffoldhub.org/scaffolds/#{@scaffold}/#{@scaffold}.scaffoldspec"
+    end
+
+    def select_files(type)
       if @local
         load_local
       else
         load_remote
       end
-    end
-
-    def url
-      url = "http://scaffoldhub.org/scaffolds/#{@scaffold}/#{@scaffold}.scaffoldspec"
+      @spec[:files].select { |file_spec| file_spec[:type] == type.to_s }
     end
 
     protected
@@ -32,8 +33,8 @@ module ScaffoldHub
       @spec = YAML::load(data) unless data.nil?
     end
 
-    def method_missing(name, *args, &blk)
-      @spec.send(name)
-    end
+    #def method_missing(name, *args, &blk)
+      ##@spec.send(name)
+    #end
   end
 end

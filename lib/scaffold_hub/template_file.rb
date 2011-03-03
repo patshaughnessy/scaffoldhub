@@ -3,7 +3,7 @@ module ScaffoldHub
 
     def initialize(file_spec, scaffold, local)
       @spec_src  = file_spec[:src]
-      @spec_dest = file_spec[:dest]
+      @spec_dest = file_spec[:dest] || ''
       @scaffold  = scaffold
       @local     = local
     end
