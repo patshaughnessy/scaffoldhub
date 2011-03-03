@@ -1,9 +1,11 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
 
+require 'scaffold_hub/version'
+
 Gem::Specification.new do |s|
   s.name        = "scaffold_hub"
-  s.version     = '0.0.1'
+  s.version     = ScaffoldHub::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Pat Shaughnessy']
   s.email       = ['pat@patshaughnessy.net']
