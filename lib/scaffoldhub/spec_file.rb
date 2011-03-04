@@ -1,4 +1,4 @@
-module ScaffoldHub
+module Scaffoldhub
   class SpecFile < RemoteFile
 
     def initialize(status_proc)
@@ -7,11 +7,11 @@ module ScaffoldHub
     end
 
     def url
-      ScaffoldHub::Helper.scaffold.spec_url
+      Scaffoldhub::Helper.scaffold.spec_url
     end
 
     def select_files(type)
-      if ScaffoldHub::Helper.scaffold.local
+      if Scaffoldhub::Helper.scaffold.local
         load_local
       else
         load_remote

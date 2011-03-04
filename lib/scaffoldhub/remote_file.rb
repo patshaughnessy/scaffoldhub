@@ -1,6 +1,6 @@
 require 'net/http'
 
-module ScaffoldHub
+module Scaffoldhub
 
   class NotFoundException < RuntimeError
   end

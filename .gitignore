@@ -12,3 +12,4 @@ tags
 !.keep
 tmp/bundler
 .rvmrc
+pkg/*

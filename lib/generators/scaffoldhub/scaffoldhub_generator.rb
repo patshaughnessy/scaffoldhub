@@ -1,11 +1,11 @@
 require 'rails/generators/rails/scaffold/scaffold_generator'
 
-class ScaffoldHubGenerator < Rails::Generators::ScaffoldGenerator
+class ScaffoldhubGenerator < Rails::Generators::ScaffoldGenerator
 
-  include ScaffoldHub::Helper
+  include Scaffoldhub::Helper
 
   remove_hook_for :scaffold_controller
-  hook_for        :scaffold_controller, :as => :scaffold_hub
+  hook_for        :scaffold_controller, :as => :scaffoldhub
 
   class_option :scaffold, :default => 'default', :banner => "SCAFFOLD_NAME",  :type => :string,  :desc => "Scaffold to use"
   class_option :local,    :default => false,     :banner => "LOCAL SCAFFOLD", :type => :boolean, :desc => "Use a local scaffold, not scaffoldhub.org"

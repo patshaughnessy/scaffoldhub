@@ -1,15 +1,15 @@
-module ScaffoldHub
+module Scaffoldhub
   class TemplateFile < RemoteFile
 
     def initialize(src, dest, status_proc)
       @src      = src
       @dest     = dest || ''
-      @base_url = ScaffoldHub::Helper.scaffold.base_url
+      @base_url = Scaffoldhub::Helper.scaffold.base_url
       super(status_proc)
     end
 
     def src
-      if ScaffoldHub::Helper.scaffold.local
+      if Scaffoldhub::Helper.scaffold.local
         File.join(@base_url, @src)
       else
         @local_path

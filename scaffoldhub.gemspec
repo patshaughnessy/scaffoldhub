@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
 
-require 'scaffold_hub'
+require 'scaffoldhub'
 
 Gem::Specification.new do |s|
   s.name        = "scaffoldhub"
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{Generate Rails scaffolding from scaffoldhub.org}
   s.description = %q{Generate Rails scaffolding from scaffoldhub.org}
 
-  s.rubyforge_project = "scaffoldhub"
+  #s.rubyforge_project = "scaffoldhub"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

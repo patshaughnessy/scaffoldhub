@@ -1,4 +1,4 @@
-module ScaffoldHub
+module Scaffoldhub
   class Scaffold < RemoteFile
 
     SERVER_NAME = 'scaffoldhub.org'
