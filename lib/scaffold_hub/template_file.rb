@@ -1,34 +1,34 @@
 module ScaffoldHub
   class TemplateFile < RemoteFile
 
-    def initialize(file_spec, scaffold, local)
-      @spec_src  = file_spec[:src]
-      @spec_dest = file_spec[:dest] || ''
-      @scaffold  = scaffold
-      @local     = local
+    def initialize(src, dest, status_proc)
+      @src      = src
+      @dest     = dest || ''
+      @base_url = ScaffoldHub::Helper.scaffold.base_url
+      super(status_proc)
     end
 
     def src
-      if @local
-        File.join(File.dirname(@scaffold), @spec_src)
+      if ScaffoldHub::Helper.scaffold.local
+        File.join(@base_url, @src)
       else
         @local_path
       end
     end
 
     def dest
-      File.join(@spec_dest, File.basename(@spec_src))
+      File.join(@dest, File.basename(@src))
     end
 
     def download
-      @local_path = Tempfile.new(File.basename(@spec_src)).path
+      @local_path = Tempfile.new(File.basename(@src)).path
       open(@local_path, "wb") do |file|
         file.write(super)
       end
     end
 
     def url
-      "http://scaffoldhub.org/scaffolds/#{@scaffold}/#{@spec_src}"
+      "#{@base_url}/#{@src}"
     end
 
   end

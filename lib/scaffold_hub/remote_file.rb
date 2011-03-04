@@ -10,9 +10,14 @@ module ScaffoldHub
 
   class RemoteFile
 
+    def initialize(status_proc)
+      @status_proc = status_proc
+    end
+
     def download
       begin
         uri = URI.parse(url)
+        @status_proc.call(url)
         Net::HTTP.start(uri.host, uri.port) do |http|
           resp = http.get(uri.path)
           if resp.code.to_i == 200
@@ -23,9 +28,8 @@ module ScaffoldHub
             raise NetworkErrorException.new(url)
           end
         end
-      rescue NotFoundException
-        raise
-      rescue Exception
+      rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Errno::ECONNREFUSED,
+             Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
         raise NetworkErrorException.new(url)
       end
     end

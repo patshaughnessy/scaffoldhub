@@ -1,28 +1,30 @@
 module ScaffoldHub
   class SpecFile < RemoteFile
 
-    def initialize(location, local)
-      @location = location
-      @local    = local
+    def initialize(status_proc)
+      @status_proc = status_proc
+      super(status_proc)
     end
 
     def url
-      url = @location
+      ScaffoldHub::Helper.scaffold.spec_url
     end
 
     def select_files(type)
-      if @local
+      if ScaffoldHub::Helper.scaffold.local
         load_local
       else
         load_remote
       end
-      @spec[:files].select { |file_spec| file_spec[:type] == type.to_s }
+      @spec[:files].select { |file_spec| file_spec[:type] == type.to_s }.collect do |file_spec|
+        TemplateFile.new file_spec[:src], file_spec[:dest], @status_proc
+      end
     end
 
     protected
 
     def load_local
-      parse(File.new(@location).read)
+      parse(File.new(url).read)
     end
 
     def load_remote

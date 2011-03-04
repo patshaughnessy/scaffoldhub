@@ -1,28 +1,36 @@
 module ScaffoldHub
   module Helper
 
+    def self.scaffold
+      @scaffold
+    end
+
+    def self.scaffold=(scaffold)
+      @scaffold = scaffold
+    end
+
     def each_template_file(type)
       begin
-        scaffold_spec_location = ScaffoldHub::SpecLocation.new(options[:scaffold], options[:local])
-        scaffold_spec_file = ScaffoldHub::SpecFile.new(scaffold_spec_location.location, options[:local])
-        scaffold_spec_file.select_files(type).each do |file_spec|
-          yield download_one_file(file_spec)
+        ScaffoldHub::Helper.scaffold ||= ScaffoldHub::Scaffold.new(options[:scaffold], options[:local], status_proc)
+        ScaffoldHub::SpecFile.new(status_proc).select_files(type).each do |template_file|
+          if options[:local]
+            raise Errno::ENOENT.new(template_file.src) unless File.exists?(template_file.src)
+          else
+            template_file.download
+          end
+          yield template_file
         end
-      rescue Errno::ENOENT, ScaffoldHub::NotFoundException => e
+      rescue Errno::ENOENT
+        say_status :error, "File not found error for #{File.expand_path(options[:scaffold])}", :red
+      rescue ScaffoldHub::NotFoundException => e
         say_status :error, "HTTP 404 not found error for #{e.message}", :red
-      rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
-             Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
-        say_status :error, "Network error downloading #{e.message}.", :red
+      rescue ScaffoldHub::NetworkErrorException => e
+        say_status :error, "HTTP error connecting to #{e.message}", :red
       end
     end
 
-    def download_one_file(file_spec)
-      template_file = ScaffoldHub::TemplateFile.new(file_spec, options[:scaffold], options[:local])
-      unless options[:local]
-        say_status :download, template_file.url
-        template_file.download
-      end
-      template_file
+    def status_proc
+      @proc ||= lambda { |url| say_status :download, url }
     end
   end
 end
