@@ -5,7 +5,7 @@ require 'scaffoldhub'
 
 Gem::Specification.new do |s|
   s.name        = "scaffoldhub"
-  s.version     = ScaffoldHub::VERSION
+  s.version     = Scaffoldhub::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Pat Shaughnessy']
   s.email       = ['pat@patshaughnessy.net']
