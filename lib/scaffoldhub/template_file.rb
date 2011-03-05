@@ -3,7 +3,7 @@ module Scaffoldhub
 
     def initialize(src, dest, local, base_url, status_proc)
       @src      = src
-      @dest     = dest
+      @dest     = dest || ''
       @local    = local
       @base_url = base_url
       super(status_proc)
@@ -29,7 +29,7 @@ module Scaffoldhub
     end
 
     def url
-      "#{@base_url}#{@src}"
+      "#{@base_url}/#{@src}"
     end
 
   end

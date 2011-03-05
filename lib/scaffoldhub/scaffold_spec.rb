@@ -1,10 +1,10 @@
 module Scaffoldhub
   class ScaffoldSpec < RemoteFile
 
-    attr_accessor :url
+    SCAFFOLD_HUB_SERVER = 'scaffoldhub.org'
 
     def initialize(url, local, status_proc)
-      @url         = url
+      @scaffold    = url
       @local       = local
       @status_proc = status_proc
       super(@status_proc)
@@ -44,9 +44,17 @@ module Scaffoldhub
       end
     end
 
+    def url
+      if @local
+        @scaffold
+      else
+        "http://#{SCAFFOLD_HUB_SERVER}/scaffolds/#{@scaffold}/spec"
+      end
+    end
+
     def base_url
       if @local
-        File.dirname(File.expand_path(@url))
+        File.dirname(File.expand_path(@scaffold))
       else
         @spec[:base_url]
       end

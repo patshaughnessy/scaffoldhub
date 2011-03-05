@@ -47,6 +47,8 @@ describe Scaffoldhub::ScaffoldSpec do
   :type: other
 YAML
 
+    FAKE_SCAFFOLDHUB_URL = 'http://fake.scaffoldhub.org:1234/scaffolds/autocomplete/spec'
+
     subject do
       Scaffoldhub::ScaffoldSpec.new(FAKE_SCAFFOLDHUB_URL, false, @status_proc)
     end

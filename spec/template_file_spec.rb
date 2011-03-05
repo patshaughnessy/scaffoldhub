@@ -10,7 +10,7 @@ describe Scaffoldhub::TemplateFile do
 
   describe 'local template file' do
 
-    subject { Scaffoldhub::TemplateFile.new('/templates/index.html', 'public', true, File.expand_path(File.dirname(__FILE__)), @status_proc) }
+    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', true, File.expand_path(File.dirname(__FILE__)), @status_proc) }
 
     its(:src)  { should == File.expand_path(File.join(File.dirname(__FILE__), 'templates', 'index.html')) }
     its(:url)  { should == File.expand_path(File.join(File.dirname(__FILE__), 'templates', 'index.html')) }
@@ -21,7 +21,7 @@ describe Scaffoldhub::TemplateFile do
 
     FAKE_GITHUB_URL = 'http://github.com/patshaughnessy/scaffolds/default'
 
-    subject { Scaffoldhub::TemplateFile.new('/templates/index.html', 'public', false, FAKE_GITHUB_URL, @status_proc) }
+    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', false, FAKE_GITHUB_URL, @status_proc) }
 
     its(:url)  { should == FAKE_GITHUB_URL + '/templates/index.html' }
     its(:dest) { should == File.join('public', 'index.html') }
