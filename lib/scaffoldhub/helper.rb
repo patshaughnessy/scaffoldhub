@@ -30,8 +30,6 @@ module Scaffoldhub
       end
     end
 
-    protected
-
     def scaffold_spec
       Helper.scaffold_spec ||= download_scaffold_spec!
     end

@@ -1,0 +1,113 @@
+require 'spec_helper'
+
+class FakeGenerator
+  include Scaffoldhub::Helper
+
+  attr_accessor :files
+
+  def initialize(local)
+    @files = []
+    @local = local
+  end
+
+  def copy_files
+    each_template_file(:sometype) do |template_file|
+      files << template_file
+    end
+  end
+
+  def options
+    { :scaffold => 'some_scaffold', :local => @local }
+  end
+end
+
+describe Scaffoldhub::Helper do
+
+  describe 'local scaffold' do
+
+    before(:all) do
+      Scaffoldhub::Helper.scaffold_spec = nil
+      status_proc = mock
+      status_proc.stubs(:call)
+      mock_spec = mock
+      Scaffoldhub::ScaffoldSpec.stubs(:new).with('some_scaffold', true, status_proc).returns(mock_spec)
+      mock_spec.stubs(:download_and_parse!)
+      mock_template_file_array = [
+        Scaffoldhub::TemplateFile.new('src1', 'dest1', true, '/some/path', status_proc),
+        Scaffoldhub::TemplateFile.new('src2', 'dest2', true, '/some/path', status_proc),
+        Scaffoldhub::TemplateFile.new('src3', 'dest3', true, '/some/path', status_proc)
+      ]
+      mock_spec.stubs(:select_files).with(:sometype).returns(mock_template_file_array)
+      @gen = FakeGenerator.new(true)
+      @gen.stubs(:status_proc).returns(status_proc)
+    end
+
+    it 'should yield the template files' do
+      File.expects(:exists?).with('/some/path/src1').returns(true)
+      File.expects(:exists?).with('/some/path/src2').returns(true)
+      File.expects(:exists?).with('/some/path/src3').returns(true)
+      @gen.copy_files
+      @gen.files[0].src.should == '/some/path/src1'
+      @gen.files[1].src.should == '/some/path/src2'
+      @gen.files[2].src.should == '/some/path/src3'
+    end
+
+    it 'should raise an exception if the template file doesn\'t exist' do
+      File.expects(:exists?).with('/some/path/src1').returns(false)
+      @gen.expects(:say_status).with(:error, 'No such file or directory - /some/path/src1', :red)
+      @gen.copy_files
+    end
+  end
+
+  describe 'remote scaffold' do
+
+    before do
+      Scaffoldhub::Helper.scaffold_spec = nil
+      status_proc = mock
+      status_proc.stubs(:call)
+      mock_spec = mock
+      Scaffoldhub::ScaffoldSpec.stubs(:new).with('some_scaffold', false, status_proc).returns(mock_spec)
+      mock_spec.stubs(:download_and_parse!)
+      template1 = Scaffoldhub::TemplateFile.new('src1', 'dest1', false, 'http://some.server/some/path', status_proc)
+      template1.expects(:download!)
+      template1.stubs(:src).returns('src1')
+      template2 = Scaffoldhub::TemplateFile.new('src2', 'dest2', false, 'http://some.server/some/path', status_proc)
+      template2.expects(:download!)
+      template2.stubs(:src).returns('src2')
+      template3 = Scaffoldhub::TemplateFile.new('src3', 'dest3', false, 'http://some.server/some/path', status_proc)
+      template3.expects(:download!)
+      template3.stubs(:src).returns('src3')
+      mock_template_file_array = [ template1, template2, template3 ]
+      mock_spec.stubs(:select_files).with(:sometype).returns(mock_template_file_array)
+      @gen = FakeGenerator.new(false)
+      @gen.stubs(:status_proc).returns(status_proc)
+    end
+
+    it 'should yield the template files' do
+      @gen.copy_files
+      @gen.files[0].src.should == 'src1'
+      @gen.files[1].src.should == 'src2'
+      @gen.files[2].src.should == 'src3'
+    end
+  end
+
+  describe 'sharing scaffold spec among generators' do
+
+    before do
+      Scaffoldhub::Helper.scaffold_spec = nil
+      @mock_spec = mock
+      @mock_spec.stubs(:download_and_parse!)
+      status_proc = mock
+      Scaffoldhub::ScaffoldSpec.expects(:new).once.with('some_scaffold', false, status_proc).returns(@mock_spec)
+      @gen =  FakeGenerator.new(false)
+      @gen.stubs(:status_proc).returns(status_proc)
+      @gen2 = FakeGenerator.new(false)
+      @gen2.stubs(:status_proc).returns(status_proc)
+    end
+
+    it 'should save the scaffold spec in the module among different generators' do
+      @gen.scaffold_spec.should  == @mock_spec
+      @gen2.scaffold_spec.should == @mock_spec
+    end
+  end
+end

@@ -29,7 +29,7 @@ module Scaffoldhub
     end
 
     def url
-      "#{@base_url}/#{@src}"
+      "#{@base_url}#{@src}"
     end
 
   end
