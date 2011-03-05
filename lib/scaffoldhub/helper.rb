@@ -37,8 +37,7 @@ module Scaffoldhub
     end
 
     def download_scaffold_spec!
-      location = SpecLocation.new(options[:scaffold], options[:local], status_proc).download_location!
-      scaffold_spec = ScaffoldSpec.new(location, options[:local], status_proc)
+      scaffold_spec = ScaffoldSpec.new(options[:scaffold], options[:local], status_proc)
       scaffold_spec.download_and_parse!
       scaffold_spec
     end

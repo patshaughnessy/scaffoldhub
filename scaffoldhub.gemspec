@@ -10,10 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Pat Shaughnessy']
   s.email       = ['pat@patshaughnessy.net']
   s.homepage    = "http://scaffoldhub.org"
-  s.summary     = %q{Generate Rails scaffolding from scaffoldhub.org}
-  s.description = %q{Generate Rails scaffolding from scaffoldhub.org}
-
-  #s.rubyforge_project = "scaffoldhub"
+  s.summary     = %q{Generate customized Rails scaffolding from scaffoldhub.org}
+  s.description = %q{Run Rails scaffold generator with customized templates downloaded from scaffoldhub.org}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

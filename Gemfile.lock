@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scaffold_hub (0.0.1)
+    scaffoldhub (0.0.1)
       rails
 
 GEM
@@ -87,4 +87,4 @@ DEPENDENCIES
   mocha (~> 0.9.10)
   rake (~> 0.8.7)
   rspec (~> 2.3.0)
-  scaffold_hub!
+  scaffoldhub!

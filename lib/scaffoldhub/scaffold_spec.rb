@@ -19,12 +19,10 @@ module Scaffoldhub
     end
 
     def select_files(type)
-      Specification.files.select { |file_spec| file_spec[:type] == type.to_s }.collect do |file_spec|
+      template_file_specs.select { |file_spec| file_spec[:type] == type.to_s }.collect do |file_spec|
         TemplateFile.new file_spec[:src], file_spec[:dest], @local, base_url, @status_proc
       end
     end
-
-    protected
 
     def parse_local
       if File.exists?(url)
@@ -35,14 +33,22 @@ module Scaffoldhub
     end
 
     def parse_remote!
-      eval(remote_file_contents!)
+      @spec = YAML::load(remote_file_contents!)
+    end
+
+    def template_file_specs
+      if @local
+        Specification.files
+      else
+        @spec[:files]
+      end
     end
 
     def base_url
       if @local
         File.dirname(File.expand_path(@url))
       else
-        @url.split(/\/(?=[^\/]+(?: |$))/)[0]
+        @spec[:base_url]
       end
     end
 
