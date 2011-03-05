@@ -14,7 +14,7 @@ module Scaffoldhub
       @status_proc = status_proc
     end
 
-    def download
+    def remote_file_contents!
       begin
         uri = URI.parse(url)
         @status_proc.call(url)

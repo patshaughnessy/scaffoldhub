@@ -1,15 +1,16 @@
 module Scaffoldhub
   class TemplateFile < RemoteFile
 
-    def initialize(src, dest, status_proc)
+    def initialize(src, dest, local, base_url, status_proc)
       @src      = src
-      @dest     = dest || ''
-      @base_url = Scaffoldhub::Helper.scaffold.base_url
+      @dest     = dest
+      @local    = local
+      @base_url = base_url
       super(status_proc)
     end
 
     def src
-      if Scaffoldhub::Helper.scaffold.local
+      if @local
         File.join(@base_url, @src)
       else
         @local_path
@@ -20,10 +21,10 @@ module Scaffoldhub
       File.join(@dest, File.basename(@src))
     end
 
-    def download
+    def download!
       @local_path = Tempfile.new(File.basename(@src)).path
       open(@local_path, "wb") do |file|
-        file.write(super)
+        file.write(remote_file_contents!)
       end
     end
 

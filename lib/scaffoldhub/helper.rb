@@ -1,27 +1,28 @@
 module Scaffoldhub
   module Helper
 
-    def self.scaffold
-      @scaffold
-    end
+    class << self
+      def scaffold_spec
+        @scaffold_spec
+      end
 
-    def self.scaffold=(scaffold)
-      @scaffold = scaffold
+      def scaffold_spec=(scaffold)
+        @scaffold_spec = scaffold
+      end
     end
 
     def each_template_file(type)
       begin
-        Scaffoldhub::Helper.scaffold ||= Scaffoldhub::Scaffold.new(options[:scaffold], options[:local], status_proc)
-        Scaffoldhub::SpecFile.new(status_proc).select_files(type).each do |template_file|
+        scaffold_spec.select_files(type).each do |template_file|
           if options[:local]
             raise Errno::ENOENT.new(template_file.src) unless File.exists?(template_file.src)
           else
-            template_file.download
+            template_file.download!
           end
           yield template_file
         end
-      rescue Errno::ENOENT
-        say_status :error, "File not found error for #{File.expand_path(options[:scaffold])}", :red
+      rescue Errno::ENOENT => e
+        say_status :error, e.message, :red
       rescue Scaffoldhub::NotFoundException => e
         say_status :error, "HTTP 404 not found error for #{e.message}", :red
       rescue Scaffoldhub::NetworkErrorException => e
@@ -29,8 +30,21 @@ module Scaffoldhub
       end
     end
 
+    protected
+
+    def scaffold_spec
+      Helper.scaffold_spec ||= download_scaffold_spec!
+    end
+
+    def download_scaffold_spec!
+      location = SpecLocation.new(options[:scaffold], options[:local], status_proc).download_location!
+      scaffold_spec = ScaffoldSpec.new(location, options[:local], status_proc)
+      scaffold_spec.download_and_parse!
+      scaffold_spec
+    end
+
     def status_proc
-      @proc ||= lambda { |url| say_status :download, url }
+      @status_proc ||= lambda { |url| say_status :download, url }
     end
   end
 end
