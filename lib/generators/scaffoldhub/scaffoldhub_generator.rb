@@ -7,6 +7,9 @@ class ScaffoldhubGenerator < Rails::Generators::ScaffoldGenerator
   remove_hook_for :scaffold_controller
   hook_for        :scaffold_controller, :as => :scaffoldhub
 
+  remove_hook_for :orm
+  hook_for        :orm, :as= => :scaffoldhub
+
   class_option :scaffold, :default => 'default', :banner => "SCAFFOLD_NAME",  :type => :string,  :desc => "Scaffold to use"
   class_option :local,    :default => false,     :banner => "LOCAL SCAFFOLD", :type => :boolean, :desc => "Use a local scaffold, not scaffoldhub.org"
 

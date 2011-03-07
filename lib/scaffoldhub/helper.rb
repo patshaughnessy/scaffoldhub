@@ -30,6 +30,21 @@ module Scaffoldhub
       end
     end
 
+    def find_template_file(type, name)
+      begin
+        scaffold_spec.find_file(type, name)
+      rescue Errno::ENOENT => e
+        say_status :error, e.message, :red
+        nil
+      rescue Scaffoldhub::NotFoundException => e
+        say_status :error, "HTTP 404 not found error for #{e.message}", :red
+        nil
+      rescue Scaffoldhub::NetworkErrorException => e
+        say_status :error, "HTTP error connecting to #{e.message}", :red
+        nil
+      end
+    end
+
     def scaffold_spec
       Helper.scaffold_spec ||= download_scaffold_spec!
     end

@@ -1,3 +1,5 @@
+require 'yaml'
+
 module Scaffoldhub
   class Specification
 
@@ -23,6 +25,10 @@ module Scaffoldhub
 
       def base_url=(url)
         @@base_url = url
+      end
+
+      def to_yaml
+        { :base_url => base_url, :files => files }.to_yaml
       end
     end
 
