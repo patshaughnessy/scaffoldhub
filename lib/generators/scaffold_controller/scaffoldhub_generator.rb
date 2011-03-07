@@ -13,7 +13,7 @@ module ScaffoldController
 
     def create_controller_files
       each_template_file(:controller) do |controller_template_file|
-        template controller_template_file.src, File.join('app/controllers', class_path, controller_template_file.dest)
+        template controller_template_file.src, File.join('app/controllers', class_path, "#{controller_file_name}_controller.rb")
       end
     end
   end
