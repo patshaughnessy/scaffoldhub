@@ -75,5 +75,9 @@ describe Scaffoldhub::RemoteFile do
       end
     end
 
+    describe 'Net:HTTP SSL calls' do
+      #TBD
+    end
+
   end
 end
