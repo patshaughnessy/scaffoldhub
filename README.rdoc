@@ -1,0 +1,5 @@
+=ScaffoldHub
+
+Browse different scaffold generators on {scaffoldhub.org}[http://scaffoldhub.org] and run any of them in your Rails 3 app with this gem.
+
+More info, documentation and examples coming soon... :)
