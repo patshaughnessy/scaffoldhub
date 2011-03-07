@@ -14,12 +14,7 @@ module Scaffoldhub
     def each_template_file(type)
       begin
         scaffold_spec.select_files(type).each do |template_file|
-          if options[:local]
-            raise Errno::ENOENT.new(template_file.src) unless File.exists?(template_file.src)
-          else
-            template_file.download!
-          end
-          yield template_file
+          yield template_file.download!
         end
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red
@@ -32,7 +27,8 @@ module Scaffoldhub
 
     def find_template_file(type, name)
       begin
-        scaffold_spec.find_file(type, name)
+        template_file = scaffold_spec.find_file(type, name)
+        template_file.download! unless template_file.nil?
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red
         nil
@@ -50,13 +46,28 @@ module Scaffoldhub
     end
 
     def download_scaffold_spec!
-      scaffold_spec = ScaffoldSpec.new(options[:scaffold], options[:local], status_proc)
+      scaffold_spec = ScaffoldSpec.new(scaffold_name, options[:local], status_proc)
       scaffold_spec.download_and_parse!
       scaffold_spec
+    end
+
+    def scaffold_name
+      parse_scaffold_option(0)
+    end
+
+    def scaffold_parameter
+      parse_scaffold_option(1)
     end
 
     def status_proc
       @status_proc ||= lambda { |url| say_status :download, url }
     end
+
+    private
+
+    def parse_scaffold_option(index)
+      options[:scaffold].split(':')[index]
+    end
+
   end
 end

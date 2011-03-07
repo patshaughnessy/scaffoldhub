@@ -25,7 +25,7 @@ module Scaffoldhub
     end
 
     def find_file(type, name)
-      file_spec = template_file_specs.detect { |file_spec| file_spec[:src] == name && file_spec[:type] == type }
+      file_spec = template_file_specs.detect { |file_spec| file_spec[:src] == name && file_spec[:type] == type.to_s }
       unless file_spec.nil?
         TemplateFile.new file_spec[:src], file_spec[:dest], @local, base_url, @status_proc
       end

@@ -10,8 +10,15 @@ module Erb
 
     def copy_view_files
       each_template_file(:erb) do |erb_template_file|
-        template erb_template_file.src, File.join("app/views", controller_file_path, erb_template_file.dest)
+        unless erb_template_file.dest == 'app/views/layouts/layout.erb'
+          template erb_template_file.src, File.join("app/views", controller_file_path, erb_template_file.dest)
+        end
       end
+    end
+
+    def copy_layout_file
+      layout_template = find_template_file('erb', 'templates/layout.erb')
+      template layout_template.src, File.join('app/views/layouts', "#{controller_file_name}.html.erb") if layout_template
     end
   end
 end

@@ -5,9 +5,10 @@ class FakeGenerator
 
   attr_accessor :files
 
-  def initialize(local)
-    @files = []
-    @local = local
+  def initialize(local, options = 'some_scaffold:some_parameter')
+    @files   = []
+    @local   = local
+    @options = options
   end
 
   def copy_files
@@ -17,7 +18,7 @@ class FakeGenerator
   end
 
   def options
-    { :scaffold => 'some_scaffold', :local => @local }
+    { :scaffold => @options, :local => @local }
   end
 end
 
@@ -69,13 +70,13 @@ describe Scaffoldhub::Helper do
       Scaffoldhub::ScaffoldSpec.stubs(:new).with('some_scaffold', false, status_proc).returns(mock_spec)
       mock_spec.stubs(:download_and_parse!)
       template1 = Scaffoldhub::TemplateFile.new('src1', 'dest1', false, 'http://some.server/some/path', status_proc)
-      template1.expects(:download!)
+      template1.expects(:download!).returns(template1)
       template1.stubs(:src).returns('src1')
       template2 = Scaffoldhub::TemplateFile.new('src2', 'dest2', false, 'http://some.server/some/path', status_proc)
-      template2.expects(:download!)
+      template2.expects(:download!).returns(template2)
       template2.stubs(:src).returns('src2')
       template3 = Scaffoldhub::TemplateFile.new('src3', 'dest3', false, 'http://some.server/some/path', status_proc)
-      template3.expects(:download!)
+      template3.expects(:download!).returns(template3)
       template3.stubs(:src).returns('src3')
       mock_template_file_array = [ template1, template2, template3 ]
       mock_spec.stubs(:select_files).with(:sometype).returns(mock_template_file_array)
@@ -109,5 +110,30 @@ describe Scaffoldhub::Helper do
       @gen.scaffold_spec.should  == @mock_spec
       @gen2.scaffold_spec.should == @mock_spec
     end
+  end
+
+  describe '#find_template_file' do
+
+    it 'should call find_file on the scaffold spec' do
+      gen = FakeGenerator.new(false)
+      gen.expects(:find_file).with('type', 'name')
+      gen.find_file('type', 'name')
+    end
+  end
+
+  describe '#scaffold_name' do
+
+    describe 'both values present' do
+      subject { FakeGenerator.new(false) }
+      its(:scaffold_name)      { should == 'some_scaffold' }
+      its(:scaffold_parameter) { should == 'some_parameter' }
+    end
+
+    describe 'only scaffold name present' do
+      subject { FakeGenerator.new(false, 'scaffold_name_only') }
+      its(:scaffold_name)      { should == 'scaffold_name_only' }
+      its(:scaffold_parameter) { should == nil }
+    end
+
   end
 end

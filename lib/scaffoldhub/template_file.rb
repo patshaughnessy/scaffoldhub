@@ -22,10 +22,15 @@ module Scaffoldhub
     end
 
     def download!
-      @local_path = Tempfile.new(File.basename(@src)).path
-      open(@local_path, "wb") do |file|
-        file.write(remote_file_contents!)
+      if @local
+        raise Errno::ENOENT.new(src) unless File.exists?(src)
+      else
+        @local_path = Tempfile.new(File.basename(@src)).path
+        open(@local_path, "wb") do |file|
+          file.write(remote_file_contents!)
+        end
       end
+      self
     end
 
     def url
