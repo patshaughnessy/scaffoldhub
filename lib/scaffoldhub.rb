@@ -5,5 +5,5 @@ require 'scaffoldhub/template_file'
 require 'scaffoldhub/helper'
 
 module Scaffoldhub
-  VERSION = '0.0.3'
+  VERSION = '0.0.4'
 end
