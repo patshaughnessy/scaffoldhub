@@ -1,5 +1,13 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
+def find_spec(scaffold_spec, type, src)
+  find_spec_in_array(scaffold_spec.template_file_specs, type, src)
+end
+
+def find_spec_in_array(array, type, src)
+  array.detect { |spec| spec[:type] == type && spec[:src] == src }
+end
+
 describe Scaffoldhub::ScaffoldSpec do
 
   before do
@@ -24,10 +32,6 @@ describe Scaffoldhub::ScaffoldSpec do
 
       it 'should parse the blog_post' do
         subject.blog_post.should == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
-      end
-
-      def find_spec(scaffold_spec, type, src)
-        scaffold_spec.template_file_specs.detect { |spec| spec[:type] == type && spec[:src] == src }
       end
 
       it 'should parse the model file' do
@@ -83,6 +87,7 @@ describe Scaffoldhub::ScaffoldSpec do
       end
     end
 
+
     describe 'parsing remote scaffold spec' do
 
       before do
@@ -115,7 +120,7 @@ YAML
         subject.expects(:remote_file_contents!).returns(TEST_YAML)
       end
 
-      it 'should require a local scaffold spec' do
+      it 'should parse a remote yaml scaffold' do
         subject.download_and_parse!
         subject.template_file_specs.should == [
           { :type => 'view',       :src => 'templates/index3.html.erb', :dest => nil },
@@ -125,6 +130,28 @@ YAML
         subject.base_url.should == 'http://github.com/patshaughnessy/scaffolds/default'
       end
     end
+  end
+
+  describe 'generating yaml' do
+
+    subject do
+      test_spec_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_scaffold.rb')
+      scaffold = Scaffoldhub::ScaffoldSpec.new(test_spec_path, true, @status_proc)
+      scaffold.download_and_parse!
+      scaffold
+    end
+
+    it 'should generate yaml from a scaffold spec' do
+      yaml = subject.to_yaml
+      parsed_yaml = YAML::load(yaml)
+      parsed_yaml[:base_url].should  == 'https://github.com/patshaughnessy/scaffolds/tree/master/default'
+      parsed_yaml[:blog_post].should == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
+      model_spec = find_spec_in_array(parsed_yaml[:files], :model, 'templates/model.rb')
+      model_spec.should_not be_nil
+      some_file_spec = find_spec_in_array(parsed_yaml[:files], :file, 'templates/jquery/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png')
+      some_file_spec.should_not be_nil
+    end
+
   end
 
   describe '#select_files' do

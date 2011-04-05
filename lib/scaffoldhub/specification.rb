@@ -36,7 +36,11 @@ module Scaffoldhub
       end
 
       def to_yaml
-        { :base_url => base_url, :files => files }.to_yaml
+        {
+          :base_url  => base_url,
+          :blog_post => blog_post,
+          :files => files
+        }.to_yaml
       end
     end
 

@@ -33,7 +33,7 @@ module Scaffoldhub
 
     def parse_local
       if File.exists?(url)
-        require url
+        eval(File.read(url))
       else
         raise Errno::ENOENT.new(url)
       end
@@ -75,5 +75,8 @@ module Scaffoldhub
       end
     end
 
+    def to_yaml
+      Specification.to_yaml if @local
+    end
   end
 end
