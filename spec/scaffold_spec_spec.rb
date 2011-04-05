@@ -12,27 +12,83 @@ describe Scaffoldhub::ScaffoldSpec do
     describe 'parsing local scaffold spec' do
 
       subject do
-        test_spec_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_scaffoldspec.rb')
-        Scaffoldhub::ScaffoldSpec.new(test_spec_path, true, @status_proc)
+        test_spec_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_scaffold.rb')
+        scaffold = Scaffoldhub::ScaffoldSpec.new(test_spec_path, true, @status_proc)
+        scaffold.download_and_parse!
+        scaffold
       end
+
+      it 'should set the base_url to the scaffold specs folder' do
+        subject.base_url.should == File.expand_path(File.join(File.dirname(__FILE__), 'fixtures'))
+      end
+
+      it 'should parse the blog_post' do
+        subject.blog_post.should == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
+      end
+
+      def find_spec(scaffold_spec, type, src)
+        scaffold_spec.template_file_specs.detect { |spec| spec[:type] == type && spec[:src] == src }
+      end
+
+      it 'should parse the model file' do
+        model_spec = subject.template_file_specs.detect { |spec| spec[:type] == :model }
+        find_spec(subject, :model, 'templates/model.rb').should_not be_nil
+      end
+
+      it 'should parse the controller file' do
+        find_spec(subject, :controller, 'templates/controller.rb').should_not be_nil
+      end
+
+      it 'should parse a view file' do
+        find_spec(subject, :view, 'templates/_form.html.erb').should_not be_nil
+      end
+
+      it 'should parse a layout file' do
+        find_spec(subject, :layout, 'templates/layout.erb').should_not be_nil
+      end
+
+      it 'should parse with_options and use :src as a folder for the given file' do
+        find_spec(subject, :view, 'templates/new.html.erb').should_not be_nil
+        find_spec(subject, :view, 'templates/edit.html.erb').should_not be_nil
+        find_spec(subject, :view, 'templates/index.html.erb').should_not be_nil
+        find_spec(subject, :view, 'templates/show.html.erb').should_not be_nil
+      end
+
+      it 'should parse a vanilla template file with a dest attribute' do
+        template_spec = find_spec(subject, :template, 'templates/other_code_file.erb')
+        template_spec.should_not be_nil
+        template_spec[:dest].should == 'lib/other_code_file.rb'
+      end
+
+      it 'should parse a normal file with a dest attribute' do
+        template_spec = find_spec(subject, :file, 'templates/jquery/jquery-1.4.4.min.js')
+        file_spec = subject.template_file_specs.detect { |spec| spec[:type] == :file }
+        file_spec.should_not be_nil
+        file_spec[:dest].should == 'public/javascripts'
+      end
+
+      it 'should recursively parse with_options' do
+        template_spec1 = find_spec(subject, :file, 'templates/jquery/jquery-ui-1.8.10.custom.min.js')
+        template_spec1.should_not be_nil
+        template_spec1[:dest].should == 'public/javascripts'
+        template_spec2 = find_spec(subject, :file, 'templates/jquery/ui-lightness/jquery-ui-1.8.10.custom.css')
+        template_spec2.should_not be_nil
+        template_spec2[:dest].should == 'public/javascripts/ui-lightness'
+        template_spec3 = find_spec(subject, :file, 'templates/jquery/ui-lightness/images/ui-bg_diagonals-thick_18_b81900_40x40.png')
+        template_spec3.should_not be_nil
+        template_spec3[:dest].should == 'public/javascripts/ui-lightness/images'
+        template_spec4 = find_spec(subject, :file, 'templates/jquery/ui-lightness/images/ui-icons_ffffff_256x240.png')
+        template_spec4.should_not be_nil
+        template_spec4[:dest].should == 'public/javascripts/ui-lightness/images'
+      end
+    end
+
+    describe 'parsing remote scaffold spec' do
 
       before do
         Scaffoldhub::Specification.files = []
         Scaffoldhub::Specification.base_url = nil
       end
-
-      it 'should require a local scaffold spec and parse the file list' do
-        subject.download_and_parse!
-        subject.template_file_specs.should == [
-          { :type => 'erb',        :src => 'templates/index3.html.erb', :dest => '' },
-          { :type => 'controller', :src => 'templates/index2.html.erb', :dest => '' },
-          { :type => 'other',      :src => 'templates/index.html.erb',  :dest => 'app/views/welcome' }
-        ]
-        subject.base_url.should == File.expand_path(File.join(File.dirname(__FILE__), 'fixtures'))
-      end
-    end
-
-    describe 'parsing remote scaffold spec' do
 
       TEST_YAML = <<YAML
   --- 
@@ -40,13 +96,13 @@ describe Scaffoldhub::ScaffoldSpec do
   :files: 
   - :src: templates/index3.html.erb
     :dest: 
-    :type: erb
+    :type: view
   - :src: templates/index2.html.erb
     :dest: 
     :type: controller
   - :src: templates/index.html.erb
     :dest: app/views/welcome
-    :type: other
+    :type: file
 YAML
 
       subject do
@@ -62,9 +118,9 @@ YAML
       it 'should require a local scaffold spec' do
         subject.download_and_parse!
         subject.template_file_specs.should == [
-          { :type => 'erb',        :src => 'templates/index3.html.erb', :dest => nil },
+          { :type => 'view',       :src => 'templates/index3.html.erb', :dest => nil },
           { :type => 'controller', :src => 'templates/index2.html.erb', :dest => nil },
-          { :type => 'other',      :src => 'templates/index.html.erb',  :dest => 'app/views/welcome' }
+          { :type => 'file',       :src => 'templates/index.html.erb',  :dest => 'app/views/welcome' }
         ]
         subject.base_url.should == 'http://github.com/patshaughnessy/scaffolds/default'
       end

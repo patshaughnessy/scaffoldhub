@@ -67,5 +67,13 @@ module Scaffoldhub
       end
     end
 
+    def blog_post
+      if @local
+        Specification.blog_post
+      else
+        @spec[:blog_post]
+      end
+    end
+
   end
 end
