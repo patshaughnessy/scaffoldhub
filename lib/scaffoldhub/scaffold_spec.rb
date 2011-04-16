@@ -3,11 +3,11 @@ module Scaffoldhub
 
     SCAFFOLD_HUB_SERVER = 'scaffoldhub.org'
 
-    def initialize(url, local, status_proc)
-      @scaffold    = url
+    def initialize(scaffold, local, status_proc)
+      @scaffold    = scaffold
       @local       = local
       @status_proc = status_proc
-      super(@status_proc)
+      super(url, @status_proc)
     end
 
     def download_and_parse!
@@ -32,10 +32,10 @@ module Scaffoldhub
     end
 
     def parse_local
-      if File.exists?(url)
-        eval(File.read(url))
+      if File.exists?(@scaffold)
+        eval(File.read(@scaffold))
       else
-        raise Errno::ENOENT.new(url)
+        raise Errno::ENOENT.new(@scaffold)
       end
     end
 

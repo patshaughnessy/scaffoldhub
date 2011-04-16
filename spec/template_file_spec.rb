@@ -19,11 +19,11 @@ describe Scaffoldhub::TemplateFile do
 
   describe 'remote template file' do
 
-    FAKE_GITHUB_URL = 'http://github.com/patshaughnessy/scaffolds/default'
+    FAKE_TEMPLATE_FILE_URL = 'http://github.com/patshaughnessy/scaffolds/default'
 
-    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', false, FAKE_GITHUB_URL, @status_proc) }
+    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', false, FAKE_TEMPLATE_FILE_URL, @status_proc) }
 
-    its(:url)  { should == FAKE_GITHUB_URL + '/templates/index.html' }
+    its(:url)  { should == FAKE_TEMPLATE_FILE_URL + '/templates/index.html' }
     its(:dest) { should == File.join('public', 'index.html') }
 
     describe '#download!' do

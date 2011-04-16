@@ -3,6 +3,8 @@ Scaffoldhub::Specification.new do
   # Github URL where you will post your scaffold - the speciied folder must contain this file
   base_url  'https://github.com/patshaughnessy/scaffolds/tree/master/default'
 
+  screenshot 'images/alex.jpg'
+
   # TO DO
   # thumbnail   4x3 aspect ratio image
   # name   ... what is this scaffold called?

@@ -6,7 +6,7 @@ module Scaffoldhub
       @dest     = dest || ''
       @local    = local
       @base_url = base_url
-      super(status_proc)
+      super(url, status_proc)
     end
 
     def src
