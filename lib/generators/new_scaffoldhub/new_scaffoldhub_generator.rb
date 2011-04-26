@@ -26,6 +26,8 @@ class NewScaffoldhubGenerator < Rails::Generators::NamedBase
   def copy_rails_model_template
     copy_file File.join(ActiveRecord::Generators::ModelGenerator.default_source_root, 'model.rb'),
               "#{singular_name}_scaffold/templates/model.rb"
+    copy_file File.join(ActiveRecord::Generators::ModelGenerator.default_source_root, 'migration.rb'),
+              "#{singular_name}_scaffold/templates/migration.rb"
   end
 
   def copy_rails_controller_template

@@ -9,7 +9,7 @@ module Erb
     class_option :local,    :default => false,     :banner => "LOCAL SCAFFOLD", :type => :boolean, :desc => "Use a local scaffold, not scaffoldhub.org"
 
     def copy_view_files
-      each_template_file(:erb) do |erb_template_file|
+      each_template_file(:view) do |erb_template_file|
         if is_layout_erb?(erb_template_file)
           copy_layout_file(erb_template_file)
         else

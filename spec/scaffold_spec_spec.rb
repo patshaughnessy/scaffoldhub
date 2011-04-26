@@ -144,8 +144,11 @@ YAML
     it 'should generate yaml from a scaffold spec' do
       yaml = subject.to_yaml
       parsed_yaml = YAML::load(yaml)
-      parsed_yaml[:base_url].should  == 'https://github.com/patshaughnessy/scaffolds/tree/master/default'
-      parsed_yaml[:blog_post].should == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
+      parsed_yaml[:base_url].should          == 'https://github.com/your_name/your_repo'
+      parsed_yaml[:blog_post].should         == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
+      parsed_yaml[:name].should              == 'test_scaffold'
+      parsed_yaml[:description].should       == 'The test_scaffold scaffold.'
+      parsed_yaml[:parameter_example].should == 'FIELD_NAME'
       model_spec = find_spec_in_array(parsed_yaml[:files], :model, 'templates/model.rb')
       model_spec.should_not be_nil
       some_file_spec = find_spec_in_array(parsed_yaml[:files], :file, 'templates/jquery/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png')
@@ -162,10 +165,10 @@ YAML
 
     before do
       subject.stubs(:template_file_specs).returns([
-        { :type => 'type1', :src => 'some_src',  :dest => 'some_dest' },
-        { :type => 'type1', :src => 'some_src2', :dest => 'some_dest' },
-        { :type => 'type1', :src => 'some_src3', :dest => 'some_dest' },
-        { :type => 'type2', :src => 'some_src4', :dest => 'some_dest' }
+        { :type => :type1, :src => 'some_src',  :dest => 'some_dest' },
+        { :type => :type1, :src => 'some_src2', :dest => 'some_dest' },
+        { :type => :type1, :src => 'some_src3', :dest => 'some_dest' },
+        { :type => :type2, :src => 'some_src4', :dest => 'some_dest' }
       ])
     end
 
@@ -173,7 +176,7 @@ YAML
       Scaffoldhub::TemplateFile.expects(:new).returns(mock1 = mock)
       Scaffoldhub::TemplateFile.expects(:new).returns(mock2 = mock)
       Scaffoldhub::TemplateFile.expects(:new).returns(mock3 = mock)
-      files = subject.select_files('type1')
+      files = subject.select_files(:type1)
       files.include?(mock1).should be_true
       files.include?(mock2).should be_true
       files.include?(mock3).should be_true
@@ -188,27 +191,20 @@ YAML
 
     before do
       subject.stubs(:template_file_specs).returns([
-        { :type => 'type1', :src => 'some_src',  :dest => 'some_dest' },
-        { :type => 'type1', :src => 'some_src2', :dest => 'some_dest' },
-        { :type => 'type1', :src => 'some_src3', :dest => 'some_dest' },
-        { :type => 'type2', :src => 'some_src4', :dest => 'some_dest' }
+        { :type => :type1, :src => 'some_src',  :dest => 'some_dest' },
+        { :type => :type2, :src => 'some_src2', :dest => 'some_dest' }
       ])
       subject.stubs(:base_url).returns('base')
     end
 
     it 'should find the file with the given type and src' do
-      Scaffoldhub::TemplateFile.expects(:new).with('some_src2', 'some_dest', true, 'base', @status_proc).returns(mock1 = mock)
-      subject.find_file('type1', 'some_src2').should == mock1
-    end
-
-    it 'should return nil if the name is not found' do
-      Scaffoldhub::TemplateFile.expects(:new).never
-      subject.find_file('type1', 'some_src5').should be_nil
+      Scaffoldhub::TemplateFile.expects(:new).with('some_src', 'some_dest', true, 'base', @status_proc).returns(mock1 = mock)
+      subject.find_file(:type1).should == mock1
     end
 
     it 'should return nil if the type is not found' do
       Scaffoldhub::TemplateFile.expects(:new).never
-      subject.find_file('type3', 'some_src2').should be_nil
+      subject.find_file(:type3).should be_nil
     end
   end
 end

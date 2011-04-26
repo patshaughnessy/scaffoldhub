@@ -1,14 +1,27 @@
 Scaffoldhub::Specification.new do
 
   # Github URL where you will post your scaffold - the speciied folder must contain this file
-  base_url  'https://github.com/patshaughnessy/scaffolds/tree/master/default'
+  base_url  'https://github.com/your_name/your_repo'
 
-  screenshot 'images/alex.jpg'
+  # The name of your new scaffold: should be a single word
+  name 'test_scaffold'
 
-  # TO DO
-  # thumbnail   4x3 aspect ratio image
-  # name   ... what is this scaffold called?
-  # description ... a short paragraph
+  # Metadata about this scaffold - this info is only used for display on scaffoldhub.org:
+  metadata do
+
+    # A short paragraph describing what this scaffold does
+    description 'The test_scaffold scaffold.'
+
+    # 4x3 aspect ratio screen shot
+    screenshot 'screenshot.png'
+
+    # Tag(s) to help scaffoldhub.org users find your scaffold
+    tag 'jquery'
+    tag 'autocomplete'
+  end
+
+  # Optionally specify an example of a scaffold parameter
+  parameter_example 'FIELD_NAME'
 
   # Optionally post a link to an article you write explaining how the scaffold works.
   blog_post 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'

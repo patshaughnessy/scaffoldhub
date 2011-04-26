@@ -25,9 +25,9 @@ module Scaffoldhub
       end
     end
 
-    def find_template_file(type, name)
+    def find_template_file(type)
       begin
-        template_file = scaffold_spec.find_file(type, name)
+        template_file = scaffold_spec.find_file(type)
         template_file.download! unless template_file.nil?
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red

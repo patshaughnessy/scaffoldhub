@@ -1,84 +1,74 @@
 require 'yaml'
 
+def mattr_reader(*syms)
+  syms.each do |sym|
+    class_eval(<<-EOS, __FILE__, __LINE__)
+      @@#{sym} = nil
+
+      def self.#{sym}
+        @@#{sym}
+      end
+
+      def self.#{sym}=(obj)
+        @@#{sym} = obj
+      end
+    EOS
+  end
+end
+
+def define_dsl_attributes(*syms)
+  syms.each do |sym|
+    class_eval(<<-EOS, __FILE__, __LINE__)
+      def #{sym}(val)
+        self.class.#{sym} = val
+      end
+    EOS
+  end
+end
+
+def define_dsl_file_keyword(*syms)
+  syms.each do |sym|
+    class_eval(<<-EOS, __FILE__, __LINE__)
+      def #{sym}(src, options = {})
+        file(src, options, :#{sym})
+      end
+    EOS
+  end
+end
+
 module Scaffoldhub
   class Specification
 
+    mattr_reader          :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
+    define_dsl_attributes :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
+
+    mattr_reader :files, :errors, :tags
     @@files  = []
-    @@base_url = nil
-    @@name = nil
-    @@description = nil
-    @@screenshot = nil
-    @@errors  = []
+    @@errors = []
+    @@tags   = []
+
+    define_dsl_file_keyword :model, :migration, :controller, :view, :layout
 
     class << self
-      def files
-        @@files
-      end
-
-      def files=(files)
-        @@files = files
-      end
 
       def add_file(src, dest, type)
         @@files << { :type => type, :src => src, :dest => dest }
       end
 
-      def base_url
-        @@base_url
-      end
-
-      def base_url=(path)
-        @@base_url = path
-      end
-
-      def blog_post
-        @@blog_post
-      end
-
-      def blog_post=(url)
-        @@blog_post = url
-      end
-
-      def name
-        @@name
-      end
-
-      def name=(name)
-        @@name = name
-      end
-
-      def description
-        @@description
-      end
-
-      def description=(desc)
-        @@description = desc
-      end
-
-      def screenshot
-        @@screenshot
-      end
-
-      def screenshot=(desc)
-        @@screenshot = desc
-      end
-
-      def errors
-        @@errors
-      end
-
-      def errors=(array)
-        @@errors = array
+      def add_tag(keyword)
+        @@tags << keyword
       end
 
       def to_yaml
         {
+          :name        => name,
+          :description => description,
           :base_url    => base_url,
           :blog_post   => blog_post,
           :files       => files,
-          :name        => name,
-          :description => description,
-          :screenshot  => screenshot
+          :screenshot  => screenshot,
+          :parameter_example => parameter_example,
+          :tags        => tags
         }.to_yaml
       end
 
@@ -104,7 +94,7 @@ module Scaffoldhub
         errors.push("Error: missing scaffold #{value}.") unless valid
         valid
       end
-      
+
       def has_screenshot?
         has_string_value?(:screenshot) && remote_file_exists?(File.join(base_url, screenshot))
       end
@@ -114,9 +104,7 @@ module Scaffoldhub
       end
 
       def remote_file_exists?(url)
-        puts "DEBUG remote file exists? #{url}"
         valid = RemoteFile.new(url).exists?
-        puts "DEBUG valid #{valid.inspect}"
         errors.push("Error: unable to access remote URL #{url}") unless valid
         valid
       end
@@ -135,6 +123,10 @@ module Scaffoldhub
       @context_options = @context_stack.pop
     end
 
+    def metadata
+      yield if block_given?
+    end
+
     def file(src, options = {}, type = :file)
       self.class.add_file(
         join_with_parent(@context_options[:src], src),
@@ -148,40 +140,8 @@ module Scaffoldhub
       file(src, options, :template)
     end
 
-    def model(src, options = {})
-      file(src, options, :model)
-    end
-
-    def controller(src, options = {})
-      file(src, options, :controller)
-    end
-
-    def view(src, options = {})
-      file(src, options, :view)
-    end
-
-    def layout(src, options = {})
-      file(src, options, :layout)
-    end
-
-    def base_url(path)
-      self.class.base_url = path
-    end
-
-    def blog_post(url)
-      self.class.blog_post = url
-    end
-
-    def name(name)
-      self.class.name = name
-    end
-
-    def description(desc)
-      self.class.description = desc
-    end
-
-    def screenshot(path)
-      self.class.screenshot = path
+    def tag(keyword)
+      self.class.add_tag(keyword)
     end
 
     protected
