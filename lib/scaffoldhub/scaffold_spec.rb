@@ -1,9 +1,6 @@
 module Scaffoldhub
   class ScaffoldSpec < RemoteFile
 
-    #SCAFFOLD_HUB_SERVER = 'scaffoldhub.org'
-    SCAFFOLD_HUB_SERVER = 'localhost:3000'
-
     def initialize(scaffold, local, status_proc)
       @scaffold    = scaffold
       @local       = local

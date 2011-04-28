@@ -1,6 +1,6 @@
 require 'yaml'
 
-def mattr_reader(*syms)
+def mattr_accessor(*syms)
   syms.each do |sym|
     class_eval(<<-EOS, __FILE__, __LINE__)
       @@#{sym} = nil
@@ -39,10 +39,10 @@ end
 module Scaffoldhub
   class Specification
 
-    mattr_reader          :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
+    mattr_accessor        :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
     define_dsl_attributes :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
 
-    mattr_reader :files, :errors, :tags
+    mattr_accessor :files, :errors, :tags
     @@files  = []
     @@errors = []
     @@tags   = []
@@ -67,8 +67,8 @@ module Scaffoldhub
           :blog_post   => blog_post,
           :files       => files,
           :screenshot  => screenshot,
-          :parameter_example => parameter_example,
-          :tags        => tags
+          :tags        => tags,
+          :parameter_example => parameter_example
         }.to_yaml
       end
 
