@@ -7,6 +7,5 @@ require 'scaffoldhub/runner'
 
 module Scaffoldhub
   VERSION = '0.0.6'
-  SCAFFOLD_HUB_SERVER = 'scaffoldhub-staging.heroku.com'
-  #SCAFFOLD_HUB_SERVER = 'localhost:3000'
+  SCAFFOLD_HUB_SERVER = 'scaffoldhub.org'
 end

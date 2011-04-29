@@ -63,13 +63,23 @@ module Scaffoldhub
         {
           :name        => name,
           :description => description,
-          :base_url    => base_url,
+          :base_url    => adjusted_base_url,
           :blog_post   => blog_post,
           :files       => files,
           :screenshot  => screenshot,
           :tags        => tags,
           :parameter_example => parameter_example
         }.to_yaml
+      end
+
+      def adjusted_base_url
+        if base_url =~ /github.com\/(\w+\/\w+)\/(tree|blob)\/(.*)$/
+          "https://github.com/#{$1}/raw/#{$3}"
+        elsif base_url =~ /github.com\/(\w+\/\w+)\/?$/
+          "https://github.com/#{$1}/raw/master"
+        else
+          base_url
+        end
       end
 
       def valid?
@@ -96,11 +106,11 @@ module Scaffoldhub
       end
 
       def has_screenshot?
-        has_string_value?(:screenshot) && remote_file_exists?(File.join(base_url, screenshot))
+        has_string_value?(:screenshot) && remote_file_exists?(File.join(adjusted_base_url, screenshot))
       end
 
       def all_template_files_exist?
-        files.all? { |file| remote_file_exists?(File.join(base_url, file[:src])) }
+        files.all? { |file| remote_file_exists?(File.join(adjusted_base_url, file[:src])) }
       end
 
       def remote_file_exists?(url)

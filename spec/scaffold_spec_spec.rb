@@ -144,7 +144,7 @@ YAML
     it 'should generate yaml from a scaffold spec' do
       yaml = subject.to_yaml
       parsed_yaml = YAML::load(yaml)
-      parsed_yaml[:base_url].should          == 'https://github.com/your_name/your_repo'
+      parsed_yaml[:base_url].should          == 'https://github.com/your_name/your_repo/raw/master'
       parsed_yaml[:blog_post].should         == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
       parsed_yaml[:name].should              == 'test_scaffold'
       parsed_yaml[:description].should       == 'The test_scaffold scaffold.'
@@ -155,6 +155,29 @@ YAML
       some_file_spec.should_not be_nil
     end
 
+    describe '#adjusted_base_url' do
+
+      it 'should use the raw github url when a repo root is specified' do
+        Scaffoldhub::Specification.base_url = 'https://github.com/your_name/your_repo'
+        Scaffoldhub::Specification.adjusted_base_url.should == 'https://github.com/your_name/your_repo/raw/master'
+      end
+
+      it 'should use the raw github url when a repo root is specified with a trailing slash' do
+        Scaffoldhub::Specification.base_url = 'https://github.com/your_name/your_repo/'
+        Scaffoldhub::Specification.adjusted_base_url.should == 'https://github.com/your_name/your_repo/raw/master'
+      end
+
+      it 'should use the raw github url when a blob url is specified' do
+        Scaffoldhub::Specification.base_url = 'https://github.com/patshaughnessy/scaffolds/blob/master/autocomplete/scaffold_spec.rb'
+        Scaffoldhub::Specification.adjusted_base_url.should == 'https://github.com/patshaughnessy/scaffolds/raw/master/autocomplete/scaffold_spec.rb'
+      end
+
+      it 'should use the raw github url when a tree url is specified' do
+        Scaffoldhub::Specification.base_url = 'https://github.com/patshaughnessy/scaffolds/tree/master/autocomplete/scaffold_spec.rb'
+        Scaffoldhub::Specification.adjusted_base_url.should == 'https://github.com/patshaughnessy/scaffolds/raw/master/autocomplete/scaffold_spec.rb'
+      end
+
+    end
   end
 
   describe '#select_files' do
