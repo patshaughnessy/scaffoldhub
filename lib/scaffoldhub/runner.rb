@@ -5,7 +5,7 @@ require 'thor'
 
 module Scaffoldhub
   class Runner < Thor
-    desc "push /path/to/scaffold_spec.rb", "Compile specified scaffold spec and push it to scaffold.org"
+    desc "push /path/to/scaffold_spec.rb", "Compile specified scaffold spec and push it to scaffoldhub.org"
     def push(scaffold_spec)
       if load_spec(scaffold_spec)
         if Specification.valid?

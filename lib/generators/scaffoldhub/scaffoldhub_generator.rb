@@ -14,8 +14,11 @@ class ScaffoldhubGenerator < Rails::Generators::ScaffoldGenerator
   class_option :local,    :default => false,     :banner => "LOCAL SCAFFOLD", :type => :boolean, :desc => "Use a local scaffold, not scaffoldhub.org"
 
   def download_and_copy_other_files
-    each_template_file(:other) do |other_template_file|
-      template other_template_file.src, other_template_file.dest
+    each_template_file(:template) do |template_file|
+      template template_file.src, template_file.dest
+    end
+    each_template_file(:file) do |template_file|
+      copy_file template_file.src, template_file.dest
     end
   end
 end
