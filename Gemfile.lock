@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scaffoldhub (0.0.6)
+    scaffoldhub (0.0.7)
       rails
 
 GEM
@@ -78,7 +78,7 @@ GEM
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
-    tzinfo (0.3.26)
+    tzinfo (0.3.27)
 
 PLATFORMS
   ruby
