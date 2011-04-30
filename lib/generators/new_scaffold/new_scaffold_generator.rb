@@ -2,7 +2,7 @@ require 'rails/generators/erb/scaffold/scaffold_generator'
 require 'rails/generators/rails/scaffold_controller/scaffold_controller_generator'
 require 'rails/generators/active_record/model/model_generator'
 
-class NewScaffoldhubGenerator < Rails::Generators::NamedBase
+class NewScaffoldGenerator < Rails::Generators::NamedBase
 
   def self.source_root
     File.expand_path('../templates', __FILE__)

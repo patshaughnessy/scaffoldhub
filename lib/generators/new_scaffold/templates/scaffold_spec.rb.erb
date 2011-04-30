@@ -1,30 +1,30 @@
 Scaffoldhub::Specification.new do
 
-  # Github URL where you will post your scaffold - the speciied folder must contain this file
+  # Github URL where you will post your scaffold - the specified folder must contain this file
   base_url  'https://github.com/your_name/your_repo'
 
   # The name of your new scaffold: should be a single word
   name '<%= singular_name %>'
 
-  # Metadata about this scaffold - this info is only used for display on scaffoldhub.org:
+  # Metadata about this scaffold - these values are only used for display on scaffoldhub.org:
   metadata do
 
     # A short paragraph describing what this scaffold does
     description 'The <%= singular_name %> scaffold.'
 
     # 4x3 aspect ratio screen shot
-    screenshot 'screenshot.png'
+    screenshot '<%= singular_name %>_screenshot.png'
 
     # Tag(s) to help scaffoldhub.org users find your scaffold
     tag 'jquery'
     tag 'autocomplete'
+
+    # Optionally specify an example of a scaffold parameter
+    parameter_example 'FIELD_NAME'
+
+    # Optionally post a link to an article you write explaining how the scaffold works.
+    blog_post 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
   end
-
-  # Optionally specify an example of a scaffold parameter
-  parameter_example 'FIELD_NAME'
-
-  # Optionally post a link to an article you write explaining how the scaffold works.
-  blog_post 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
 
   # Define a model template - this ERB file will be used to generate a new
   # model class with this path & filename: app/models/NAME.rb
@@ -39,6 +39,8 @@ Scaffoldhub::Specification.new do
   controller 'templates/controller.rb'
 
   # You can use "with_options" to specify the same source folder for a series of templates:
+  # You can also specify the same destination folder using the :dest option,
+  # or just use the :src and :dest options on each keyword.
   with_options :src => 'templates' do
     view '_form.html.erb'
     view 'new.html.erb'
@@ -46,4 +48,14 @@ Scaffoldhub::Specification.new do
     view 'index.html.erb'
     view 'show.html.erb'
   end
+
+  # Other keywords available are:
+
+  # Define any other generic template - this ERB file will be used to generate
+  # a new file - the dest option is required to indicate where to put the new file
+  # template 'xyz.html.erb', :dest => 'path/to/xyz.html'
+
+  # Copy any file without running an ERB transformation
+  # file 'xyz.html', :dest => 'path/to/xyz.html'
+
 end
