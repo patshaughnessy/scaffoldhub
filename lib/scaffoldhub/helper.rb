@@ -59,6 +59,10 @@ module Scaffoldhub
       parse_scaffold_option(1)
     end
 
+    def replace_name_tokens(dest)
+      dest.gsub(/PLURAL_NAME/, file_name.pluralize).gsub(/NAME/, file_name)
+    end
+
     def status_proc
       @status_proc ||= lambda { |url| say_status :download, url }
     end

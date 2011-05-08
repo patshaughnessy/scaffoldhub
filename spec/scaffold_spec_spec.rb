@@ -58,6 +58,12 @@ describe Scaffoldhub::ScaffoldSpec do
         find_spec(subject, :view, 'templates/show.html.erb').should_not be_nil
       end
 
+      it 'should parse the :rename option' do
+        partial_spec = find_spec(subject, :view, 'templates/partial.erb')
+        partial_spec.should_not be_nil
+        partial_spec[:rename].should == '_NAME.html.erb'
+      end
+
       it 'should parse a vanilla template file with a dest attribute' do
         template_spec = find_spec(subject, :template, 'templates/other_code_file.erb')
         template_spec.should_not be_nil
@@ -153,6 +159,9 @@ YAML
       model_spec.should_not be_nil
       some_file_spec = find_spec_in_array(parsed_yaml[:files], :file, 'templates/jquery/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png')
       some_file_spec.should_not be_nil
+      partial_view_spec = find_spec_in_array(parsed_yaml[:files], :view, 'templates/partial.erb')
+      partial_view_spec.should_not be_nil
+      partial_view_spec[:rename].should == '_NAME.html.erb'
     end
 
     describe '#adjusted_base_url' do
@@ -221,7 +230,7 @@ YAML
     end
 
     it 'should find the file with the given type and src' do
-      Scaffoldhub::TemplateFile.expects(:new).with('some_src', 'some_dest', true, 'base', @status_proc).returns(mock1 = mock)
+      Scaffoldhub::TemplateFile.expects(:new).with('some_src', 'some_dest', nil, true, 'base', @status_proc).returns(mock1 = mock)
       subject.find_file(:type1).should == mock1
     end
 

@@ -34,9 +34,9 @@ describe Scaffoldhub::Helper do
       Scaffoldhub::ScaffoldSpec.stubs(:new).with('some_scaffold', true, status_proc).returns(mock_spec)
       mock_spec.stubs(:download_and_parse!)
       mock_template_file_array = [
-        Scaffoldhub::TemplateFile.new('src1', 'dest1', true, '/some/path', status_proc),
-        Scaffoldhub::TemplateFile.new('src2', 'dest2', true, '/some/path', status_proc),
-        Scaffoldhub::TemplateFile.new('src3', 'dest3', true, '/some/path', status_proc)
+        Scaffoldhub::TemplateFile.new('src1', 'dest1', nil, true, '/some/path', status_proc),
+        Scaffoldhub::TemplateFile.new('src2', 'dest2', nil, true, '/some/path', status_proc),
+        Scaffoldhub::TemplateFile.new('src3', 'dest3', nil, true, '/some/path', status_proc)
       ]
       mock_spec.stubs(:select_files).with(:sometype).returns(mock_template_file_array)
       @gen = FakeGenerator.new(true)
@@ -69,13 +69,13 @@ describe Scaffoldhub::Helper do
       mock_spec = mock
       Scaffoldhub::ScaffoldSpec.stubs(:new).with('some_scaffold', false, status_proc).returns(mock_spec)
       mock_spec.stubs(:download_and_parse!)
-      template1 = Scaffoldhub::TemplateFile.new('src1', 'dest1', false, 'http://some.server/some/path', status_proc)
+      template1 = Scaffoldhub::TemplateFile.new('src1', 'dest1', nil, false, 'http://some.server/some/path', status_proc)
       template1.expects(:download!).returns(template1)
       template1.stubs(:src).returns('src1')
-      template2 = Scaffoldhub::TemplateFile.new('src2', 'dest2', false, 'http://some.server/some/path', status_proc)
+      template2 = Scaffoldhub::TemplateFile.new('src2', 'dest2', nil, false, 'http://some.server/some/path', status_proc)
       template2.expects(:download!).returns(template2)
       template2.stubs(:src).returns('src2')
-      template3 = Scaffoldhub::TemplateFile.new('src3', 'dest3', false, 'http://some.server/some/path', status_proc)
+      template3 = Scaffoldhub::TemplateFile.new('src3', 'dest3', nil, false, 'http://some.server/some/path', status_proc)
       template3.expects(:download!).returns(template3)
       template3.stubs(:src).returns('src3')
       mock_template_file_array = [ template1, template2, template3 ]

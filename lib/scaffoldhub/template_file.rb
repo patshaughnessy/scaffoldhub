@@ -1,9 +1,10 @@
 module Scaffoldhub
   class TemplateFile < RemoteFile
 
-    def initialize(src, dest, local, base_url, status_proc)
+    def initialize(src, dest, rename, local, base_url, status_proc)
       @src      = src
       @dest     = dest || ''
+      @rename   = rename
       @local    = local
       @base_url = base_url
       super(url, status_proc)
@@ -18,7 +19,11 @@ module Scaffoldhub
     end
 
     def dest
-      File.join(@dest, File.basename(@src))
+      if @rename
+        File.join(@dest, @rename)
+      else
+        File.join(@dest, File.basename(@src))
+      end
     end
 
     def download!

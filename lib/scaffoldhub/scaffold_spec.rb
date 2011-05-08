@@ -18,14 +18,14 @@ module Scaffoldhub
 
     def select_files(type)
       template_file_specs.select { |file_spec| file_spec[:type].to_sym == type }.collect do |file_spec|
-        TemplateFile.new file_spec[:src], file_spec[:dest], @local, base_url, @status_proc
+        TemplateFile.new file_spec[:src], file_spec[:dest], file_spec[:rename], @local, base_url, @status_proc
       end
     end
 
     def find_file(type)
       file_spec = template_file_specs.detect { |file_spec| file_spec[:type].to_sym == type }
       unless file_spec.nil?
-        TemplateFile.new file_spec[:src], file_spec[:dest], @local, base_url, @status_proc
+        TemplateFile.new file_spec[:src], file_spec[:dest], file_spec[:rename], @local, base_url, @status_proc
       end
     end
 

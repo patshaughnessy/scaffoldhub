@@ -15,10 +15,10 @@ class ScaffoldhubGenerator < Rails::Generators::ScaffoldGenerator
 
   def download_and_copy_other_files
     each_template_file(:template) do |template_file|
-      template template_file.src, template_file.dest
+      template  template_file.src, replace_name_tokens(template_file.dest)
     end
     each_template_file(:file) do |template_file|
-      copy_file template_file.src, template_file.dest
+      copy_file template_file.src, replace_name_tokens(template_file.dest)
     end
   end
 end

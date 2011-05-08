@@ -10,18 +10,27 @@ describe Scaffoldhub::TemplateFile do
 
   describe 'local template file' do
 
-    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', true, File.expand_path(File.dirname(__FILE__)), @status_proc) }
+    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', nil, true, File.expand_path(File.dirname(__FILE__)), @status_proc) }
 
     its(:src)  { should == File.expand_path(File.join(File.dirname(__FILE__), 'templates', 'index.html')) }
     its(:url)  { should == File.expand_path(File.join(File.dirname(__FILE__), 'templates', 'index.html')) }
     its(:dest) { should == File.join('public', 'index.html') }
   end
 
+  describe 'local template file with rename option' do
+
+    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', 'other_file_name.html', true, File.expand_path(File.dirname(__FILE__)), @status_proc) }
+
+    its(:src)  { should == File.expand_path(File.join(File.dirname(__FILE__), 'templates', 'index.html')) }
+    its(:url)  { should == File.expand_path(File.join(File.dirname(__FILE__), 'templates', 'index.html')) }
+    its(:dest) { should == File.join('public', 'other_file_name.html') }
+  end
+
   describe 'remote template file' do
 
     FAKE_TEMPLATE_FILE_URL = 'http://github.com/patshaughnessy/scaffolds/default'
 
-    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', false, FAKE_TEMPLATE_FILE_URL, @status_proc) }
+    subject { Scaffoldhub::TemplateFile.new('templates/index.html', 'public', nil, false, FAKE_TEMPLATE_FILE_URL, @status_proc) }
 
     its(:url)  { should == FAKE_TEMPLATE_FILE_URL + '/templates/index.html' }
     its(:dest) { should == File.join('public', 'index.html') }

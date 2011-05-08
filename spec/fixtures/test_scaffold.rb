@@ -39,7 +39,7 @@ Scaffoldhub::Specification.new do
   view 'templates/_form.html.erb'
 
   # Define a view layout template - this ERB file will be used to generate a new
-  # view layout file with this path & filename: app/views/layouts/PLURAL_NAME.rb
+  # view layout file with this path & filename: app/views/layouts/PLURAL_NAME.html.erb
   layout 'templates/layout.erb'
 
   # You can use "with_options" to specify the same source folder for a series of templates:
@@ -48,6 +48,7 @@ Scaffoldhub::Specification.new do
     view 'edit.html.erb'
     view 'index.html.erb'
     view 'show.html.erb'
+    view 'partial.erb', :rename => '_NAME.html.erb'
   end
 
   # Specify some other code file that should be generated from an ERB template; use
@@ -58,10 +59,11 @@ Scaffoldhub::Specification.new do
   # the :dest option is required to indicate where the generated file should go
   file 'templates/jquery/jquery-1.4.4.min.js', :dest => 'public/javascripts'
 
-  # You can use with_options recursively - both the :src and :dest options values
-  # will be constructed relative to the parent with_option values.
   with_options :src => 'templates/jquery', :dest => 'public/javascripts' do
     file 'jquery-ui-1.8.10.custom.min.js'
+
+    # You can use with_options recursively - both the :src and :dest options values
+    # will be constructed relative to the parent with_option values.
     with_options :src => 'ui-lightness', :dest => 'ui-lightness' do
       file 'jquery-ui-1.8.10.custom.css'
       with_options :src => 'images', :dest => 'images' do

@@ -51,8 +51,8 @@ module Scaffoldhub
 
     class << self
 
-      def add_file(src, dest, type)
-        @@files << { :type => type, :src => src, :dest => dest }
+      def add_file(src, dest, rename, type)
+        @@files << { :type => type, :src => src, :rename => rename, :dest => dest }
       end
 
       def add_tag(keyword)
@@ -141,6 +141,7 @@ module Scaffoldhub
       self.class.add_file(
         join_with_parent(@context_options[:src], src),
         join_with_parent(@context_options[:dest], options[:dest]),
+        options[:rename],
         type
       )
     end
