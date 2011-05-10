@@ -42,10 +42,11 @@ module Scaffoldhub
     mattr_accessor        :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
     define_dsl_attributes :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
 
-    mattr_accessor :files, :errors, :tags
+    mattr_accessor :files, :errors, :tags, :gems
     @@files  = []
     @@errors = []
     @@tags   = []
+    @@gems   = []
 
     define_dsl_file_keyword :model, :migration, :controller, :view, :layout
 
@@ -65,6 +66,7 @@ module Scaffoldhub
           :description => description,
           :base_url    => adjusted_base_url,
           :blog_post   => blog_post,
+          :gems        => gems,
           :files       => files,
           :screenshot  => screenshot,
           :tags        => tags,
@@ -153,6 +155,10 @@ module Scaffoldhub
 
     def tag(keyword)
       self.class.add_tag(keyword)
+    end
+
+    def gem(*args)
+      @@gems << args
     end
 
     protected

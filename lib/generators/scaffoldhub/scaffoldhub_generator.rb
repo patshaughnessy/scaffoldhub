@@ -21,4 +21,10 @@ class ScaffoldhubGenerator < Rails::Generators::ScaffoldGenerator
       copy_file template_file.src, replace_name_tokens(template_file.dest)
     end
   end
+
+  def add_gems_to_gemfile
+    each_gem do |args|
+      gem(*args)
+    end
+  end
 end

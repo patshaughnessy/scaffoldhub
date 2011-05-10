@@ -18,13 +18,13 @@ Scaffoldhub::Specification.new do
     # Tag(s) to help scaffoldhub.org users find your scaffold
     tag 'jquery'
     tag 'autocomplete'
+
+    # Optionally specify an example of a scaffold parameter
+    parameter_example 'FIELD_NAME'
+
+    # Optionally post a link to an article you write explaining how the scaffold works.
+    blog_post 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
   end
-
-  # Optionally specify an example of a scaffold parameter
-  parameter_example 'FIELD_NAME'
-
-  # Optionally post a link to an article you write explaining how the scaffold works.
-  blog_post 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
 
   # Define a model template - this ERB file will be used to generate a new
   # model class with this path & filename: app/models/NAME.rb
@@ -38,9 +38,8 @@ Scaffoldhub::Specification.new do
   # view file with this path & filename: app/views/PLURAL_NAME/view_file_name.rb
   view 'templates/_form.html.erb'
 
-  # Define a view layout template - this ERB file will be used to generate a new
-  # view layout file with this path & filename: app/views/layouts/PLURAL_NAME.html.erb
-  layout 'templates/layout.erb'
+  gem 'some_gem', '1.0'
+  gem "some_other_gem", :group => :test, :git => "git://github.com/rails/rails"
 
   # You can use "with_options" to specify the same source folder for a series of templates:
   with_options :src => 'templates' do

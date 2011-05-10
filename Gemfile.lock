@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scaffoldhub (0.0.8)
+    scaffoldhub (0.0.9)
       rails
 
 GEM

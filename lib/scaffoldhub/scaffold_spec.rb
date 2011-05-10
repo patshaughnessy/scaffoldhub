@@ -73,6 +73,14 @@ module Scaffoldhub
       end
     end
 
+    def gems
+      if @local
+        Specification.gems
+      else
+        @spec[:gems]
+      end
+    end
+
     def to_yaml
       Specification.to_yaml if @local
     end

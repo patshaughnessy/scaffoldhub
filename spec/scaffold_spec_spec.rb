@@ -13,6 +13,9 @@ describe Scaffoldhub::ScaffoldSpec do
   before do
     @status_proc = mock
     @status_proc.stubs(:call)
+    Scaffoldhub::Specification.files    = []
+    Scaffoldhub::Specification.gems     = []
+    Scaffoldhub::Specification.base_url = nil
   end
 
   describe 'parsing scaffold spec' do
@@ -34,6 +37,13 @@ describe Scaffoldhub::ScaffoldSpec do
         subject.blog_post.should == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
       end
 
+      it 'should parse all of the gems' do
+        subject.gems.should == [
+          [ 'some_gem', '1.0' ],
+          [ 'some_other_gem', { :group => :test, :git => 'git://github.com/rails/rails' } ]
+        ]
+      end
+
       it 'should parse the model file' do
         model_spec = subject.template_file_specs.detect { |spec| spec[:type] == :model }
         find_spec(subject, :model, 'templates/model.rb').should_not be_nil
@@ -45,10 +55,6 @@ describe Scaffoldhub::ScaffoldSpec do
 
       it 'should parse a view file' do
         find_spec(subject, :view, 'templates/_form.html.erb').should_not be_nil
-      end
-
-      it 'should parse a layout file' do
-        find_spec(subject, :layout, 'templates/layout.erb').should_not be_nil
       end
 
       it 'should parse with_options and use :src as a folder for the given file' do
@@ -96,23 +102,21 @@ describe Scaffoldhub::ScaffoldSpec do
 
     describe 'parsing remote scaffold spec' do
 
-      before do
-        Scaffoldhub::Specification.files = []
-        Scaffoldhub::Specification.base_url = nil
-      end
-
       TEST_YAML = <<YAML
   --- 
   :base_url: http://github.com/patshaughnessy/scaffolds/default
   :files: 
   - :src: templates/index3.html.erb
     :dest: 
+    :rename: 
     :type: view
   - :src: templates/index2.html.erb
     :dest: 
+    :rename: new_file_name.rb
     :type: controller
   - :src: templates/index.html.erb
     :dest: app/views/welcome
+    :rename:
     :type: file
 YAML
 
@@ -121,17 +125,15 @@ YAML
       end
 
       before do
-        Scaffoldhub::Specification.files = []
-        Scaffoldhub::Specification.base_url = nil
         subject.expects(:remote_file_contents!).returns(TEST_YAML)
       end
 
       it 'should parse a remote yaml scaffold' do
         subject.download_and_parse!
         subject.template_file_specs.should == [
-          { :type => 'view',       :src => 'templates/index3.html.erb', :dest => nil },
-          { :type => 'controller', :src => 'templates/index2.html.erb', :dest => nil },
-          { :type => 'file',       :src => 'templates/index.html.erb',  :dest => 'app/views/welcome' }
+          { :type => 'view',       :src => 'templates/index3.html.erb', :dest => nil,                 :rename => nil },
+          { :type => 'controller', :src => 'templates/index2.html.erb', :dest => nil,                 :rename => 'new_file_name.rb' },
+          { :type => 'file',       :src => 'templates/index.html.erb',  :dest => 'app/views/welcome', :rename => nil }
         ]
         subject.base_url.should == 'http://github.com/patshaughnessy/scaffolds/default'
       end
@@ -154,6 +156,10 @@ YAML
       parsed_yaml[:blog_post].should         == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
       parsed_yaml[:name].should              == 'test_scaffold'
       parsed_yaml[:description].should       == 'The test_scaffold scaffold.'
+      parsed_yaml[:gems].should              == [
+        [ 'some_gem', '1.0' ],
+        [ 'some_other_gem', { :group => :test, :git => 'git://github.com/rails/rails' } ]
+      ]
       parsed_yaml[:parameter_example].should == 'FIELD_NAME'
       model_spec = find_spec_in_array(parsed_yaml[:files], :model, 'templates/model.rb')
       model_spec.should_not be_nil
