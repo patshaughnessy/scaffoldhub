@@ -103,21 +103,28 @@ describe Scaffoldhub::ScaffoldSpec do
     describe 'parsing remote scaffold spec' do
 
       TEST_YAML = <<YAML
+--- 
+:base_url: http://github.com/patshaughnessy/scaffolds/default
+:files: 
+- :src: templates/index3.html.erb
+  :dest: 
+  :rename: 
+  :type: view
+- :src: templates/index2.html.erb
+  :dest: 
+  :rename: new_file_name.rb
+  :type: controller
+- :src: templates/index.html.erb
+  :dest: app/views/welcome
+  :rename:
+  :type: file
+:gems: |
   --- 
-  :base_url: http://github.com/patshaughnessy/scaffolds/default
-  :files: 
-  - :src: templates/index3.html.erb
-    :dest: 
-    :rename: 
-    :type: view
-  - :src: templates/index2.html.erb
-    :dest: 
-    :rename: new_file_name.rb
-    :type: controller
-  - :src: templates/index.html.erb
-    :dest: app/views/welcome
-    :rename:
-    :type: file
+  - - some_gem
+    - "1.0"
+  - - some_other_gem
+    - :group: :test
+      :git: git://github.com/rails/rails
 YAML
 
       subject do
@@ -136,6 +143,10 @@ YAML
           { :type => 'file',       :src => 'templates/index.html.erb',  :dest => 'app/views/welcome', :rename => nil }
         ]
         subject.base_url.should == 'http://github.com/patshaughnessy/scaffolds/default'
+        subject.gems.should == [
+          [ 'some_gem', '1.0' ],
+          [ 'some_other_gem', { :group => :test, :git => 'git://github.com/rails/rails' } ]
+        ]
       end
     end
   end

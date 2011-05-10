@@ -77,7 +77,7 @@ module Scaffoldhub
       if @local
         Specification.gems
       else
-        @spec[:gems]
+        YAML::load(@spec[:gems])
       end
     end
 
