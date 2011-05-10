@@ -43,8 +43,8 @@ module Scaffoldhub
 
     def each_gem
       begin
-        gems = scaffold_spec.gems.each do |gem|
-          yield gem
+        if (gems = scaffold_spec.gems)
+          gems.each { |gem| yield gem }
         end
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red
