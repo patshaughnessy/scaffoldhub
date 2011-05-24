@@ -10,7 +10,7 @@ module Erb
 
     def copy_view_files
       each_template_file(:view) do |erb_template_file|
-        template erb_template_file.src, File.join("app/views", controller_file_path, erb_template_file.dest)
+        template erb_template_file.src, File.join("app/views", controller_file_path, replace_name_tokens(erb_template_file.dest))
       end
     end
   end

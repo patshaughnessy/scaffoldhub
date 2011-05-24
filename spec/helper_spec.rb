@@ -136,4 +136,19 @@ describe Scaffoldhub::Helper do
     end
 
   end
+
+  describe '#replace_name_tokens' do
+    subject { FakeGenerator.new(false) }
+    before do
+      subject.expects(:file_name).returns('person')
+      subject.expects(:file_name).returns(name = mock)
+      name.stubs(:pluralize).returns('people')
+    end
+    it 'should replace the NAME token' do
+      subject.replace_name_tokens('_NAME.html.erb').should == '_person.html.erb'
+    end
+    it 'should replace the PLURAL_NAME token' do
+      subject.replace_name_tokens('PLURAL_NAME.html.erb').should == 'people.html.erb'
+    end
+  end
 end
