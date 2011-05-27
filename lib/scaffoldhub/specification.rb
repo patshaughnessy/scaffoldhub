@@ -39,8 +39,8 @@ end
 module Scaffoldhub
   class Specification
 
-    mattr_accessor        :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
-    define_dsl_attributes :name, :description, :base_url, :blog_post, :screenshot, :parameter_example
+    mattr_accessor        :name, :description, :base_url, :blog_post, :screenshot, :parameter_example, :post_install_message
+    define_dsl_attributes :name, :description, :base_url, :blog_post, :screenshot, :parameter_example, :post_install_message
 
     mattr_accessor :files, :errors, :tags, :gems
     @@files  = []
@@ -70,7 +70,8 @@ module Scaffoldhub
           :files       => files,
           :screenshot  => screenshot,
           :tags        => tags,
-          :parameter_example => parameter_example
+          :parameter_example => parameter_example,
+          :post_install_message => post_install_message
         }.to_yaml
       end
 

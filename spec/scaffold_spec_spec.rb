@@ -37,6 +37,10 @@ describe Scaffoldhub::ScaffoldSpec do
         subject.blog_post.should == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
       end
 
+      it 'should parse the post install message' do
+        subject.post_install_message.should == 'Please do this, this and that.'
+      end
+
       it 'should parse all of the gems' do
         subject.gems.should == [
           [ 'some_gem', '1.0' ],
@@ -105,6 +109,7 @@ describe Scaffoldhub::ScaffoldSpec do
       TEST_YAML = <<YAML
 --- 
 :base_url: http://github.com/patshaughnessy/scaffolds/default
+:post_install_message: Please do this, that and the other thing.
 :files: 
 - :src: templates/index3.html.erb
   :dest: 
@@ -143,6 +148,7 @@ YAML
           { :type => 'file',       :src => 'templates/index.html.erb',  :dest => 'app/views/welcome', :rename => nil }
         ]
         subject.base_url.should == 'http://github.com/patshaughnessy/scaffolds/default'
+        subject.post_install_message.should == 'Please do this, that and the other thing.'
         subject.gems.should == [
           [ 'some_gem', '1.0' ],
           [ 'some_other_gem', { :group => :test, :git => 'git://github.com/rails/rails' } ]
@@ -164,6 +170,7 @@ YAML
       yaml = subject.to_yaml
       parsed_yaml = YAML::load(yaml)
       parsed_yaml[:base_url].should          == 'https://github.com/your_name/your_repo/raw/master'
+      parsed_yaml[:post_install_message].should == 'Please do this, this and that.'
       parsed_yaml[:blog_post].should         == 'http://patshaughnessy.net/2011/3/13/view-mapper-for-rails-3-scaffoldhub'
       parsed_yaml[:name].should              == 'test_scaffold'
       parsed_yaml[:description].should       == 'The test_scaffold scaffold.'

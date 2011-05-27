@@ -6,6 +6,6 @@ require 'scaffoldhub/helper'
 require 'scaffoldhub/runner'
 
 module Scaffoldhub
-  VERSION = '0.0.12'
+  VERSION = '0.0.13'
   SCAFFOLD_HUB_SERVER = 'www.scaffoldhub.org'
 end

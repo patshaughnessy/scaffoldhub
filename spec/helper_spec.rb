@@ -33,6 +33,7 @@ describe Scaffoldhub::Helper do
       mock_spec = mock
       Scaffoldhub::ScaffoldSpec.stubs(:new).with('some_scaffold', true, status_proc).returns(mock_spec)
       mock_spec.stubs(:download_and_parse!)
+      mock_spec.stubs(:parameter_example)
       mock_template_file_array = [
         Scaffoldhub::TemplateFile.new('src1', 'dest1', nil, true, '/some/path', status_proc),
         Scaffoldhub::TemplateFile.new('src2', 'dest2', nil, true, '/some/path', status_proc),
@@ -69,6 +70,7 @@ describe Scaffoldhub::Helper do
       mock_spec = mock
       Scaffoldhub::ScaffoldSpec.stubs(:new).with('some_scaffold', false, status_proc).returns(mock_spec)
       mock_spec.stubs(:download_and_parse!)
+      mock_spec.stubs(:parameter_example)
       template1 = Scaffoldhub::TemplateFile.new('src1', 'dest1', nil, false, 'http://some.server/some/path', status_proc)
       template1.expects(:download!).returns(template1)
       template1.stubs(:src).returns('src1')
@@ -98,6 +100,7 @@ describe Scaffoldhub::Helper do
       Scaffoldhub::Helper.scaffold_spec = nil
       @mock_spec = mock
       @mock_spec.stubs(:download_and_parse!)
+      @mock_spec.stubs(:parameter_example)
       status_proc = mock
       Scaffoldhub::ScaffoldSpec.expects(:new).once.with('some_scaffold', false, status_proc).returns(@mock_spec)
       @gen =  FakeGenerator.new(false)
@@ -140,6 +143,7 @@ describe Scaffoldhub::Helper do
   describe '#replace_name_tokens' do
     subject { FakeGenerator.new(false) }
     before do
+      subject.expects(:scaffold_parameter).twice.returns('some_field')
       subject.expects(:file_name).returns('person')
       subject.expects(:file_name).returns(name = mock)
       name.stubs(:pluralize).returns('people')
@@ -149,6 +153,9 @@ describe Scaffoldhub::Helper do
     end
     it 'should replace the PLURAL_NAME token' do
       subject.replace_name_tokens('PLURAL_NAME.html.erb').should == 'people.html.erb'
+    end
+    it 'should replace the SCAFFOLD_PARAMETER token' do
+      subject.replace_name_tokens('blah blah SCAFFOLD_PARAMETER blah blah blah').should == 'blah blah some_field blah blah blah'
     end
   end
 end

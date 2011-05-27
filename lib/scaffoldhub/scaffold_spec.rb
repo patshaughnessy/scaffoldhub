@@ -81,6 +81,22 @@ module Scaffoldhub
       end
     end
 
+    def post_install_message
+      if @local
+        Specification.post_install_message
+      else
+        @spec[:post_install_message]
+      end
+    end
+
+    def parameter_example
+      if @local
+        Specification.parameter_example
+      else
+        @spec[:parameter_example]
+      end
+    end
+
     def to_yaml
       Specification.to_yaml if @local
     end

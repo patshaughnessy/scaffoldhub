@@ -83,4 +83,6 @@ Scaffoldhub::Specification.new do
       file 'images/ui-icons_ffffff_256x240.png', :dest => 'images'
     end
   end
+
+  post_install_message 'Please do this, this and that.'
 end

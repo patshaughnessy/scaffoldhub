@@ -27,4 +27,8 @@ class ScaffoldhubGenerator < Rails::Generators::ScaffoldGenerator
       gem(*args)
     end
   end
+
+  def display_post_install_message
+    say post_install_message
+  end
 end

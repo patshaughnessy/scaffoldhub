@@ -1,6 +1,9 @@
 module Scaffoldhub
   module Helper
 
+    class ScaffoldParameterMissing < RuntimeError
+    end
+
     class << self
       def scaffold_spec
         @scaffold_spec
@@ -65,6 +68,10 @@ module Scaffoldhub
     def download_scaffold_spec!
       scaffold_spec = ScaffoldSpec.new(scaffold_name, options[:local], status_proc)
       scaffold_spec.download_and_parse!
+      if scaffold_spec.parameter_example && scaffold_parameter.nil?
+        say_status :error, parameter_missing_message(scaffold_spec.parameter_example), :red
+        raise ScaffoldParameterMissing
+      end
       scaffold_spec
     end
 
@@ -77,7 +84,14 @@ module Scaffoldhub
     end
 
     def replace_name_tokens(dest)
-      dest.gsub(/PLURAL_NAME/, file_name.pluralize).gsub(/NAME/, file_name)
+      result = dest.gsub(/PLURAL_NAME/, file_name.pluralize).gsub(/NAME/, file_name)
+      result.gsub!(/SCAFFOLD_PARAMETER/, scaffold_parameter) unless scaffold_parameter.nil?
+      result
+    end
+
+    def post_install_message
+      message = scaffold_spec.post_install_message
+      replace_name_tokens(message) if message
     end
 
     def status_proc
@@ -90,5 +104,8 @@ module Scaffoldhub
       options[:scaffold].split(':')[index]
     end
 
+    def parameter_missing_message(example)
+      "Scaffold parameter missing; please specify the #{example} after the scaffold name like this: --scaffold #{scaffold_name}:#{example}"
+    end
   end
 end
