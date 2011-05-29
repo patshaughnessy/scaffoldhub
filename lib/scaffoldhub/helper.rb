@@ -21,10 +21,13 @@ module Scaffoldhub
         end
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red
+        raise e
       rescue Scaffoldhub::NotFoundException => e
-        say_status :error, "HTTP 404 not found error for #{e.message}", :red
+        say_status :error, "HTTP 404 error - did you misspell \"#{scaffold_name}\"?", :red
+        raise e
       rescue Scaffoldhub::NetworkErrorException => e
         say_status :error, "HTTP error connecting to #{e.message}", :red
+        raise e
       end
     end
 
@@ -34,13 +37,13 @@ module Scaffoldhub
         template_file.download! unless template_file.nil?
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red
-        nil
+        raise e
       rescue Scaffoldhub::NotFoundException => e
-        say_status :error, "HTTP 404 not found error for #{e.message}", :red
-        nil
+        say_status :error, "HTTP 404 error - did you misspell \"#{scaffold_name}\"?", :red
+        raise e
       rescue Scaffoldhub::NetworkErrorException => e
         say_status :error, "HTTP error connecting to #{e.message}", :red
-        nil
+        raise e
       end
     end
 
@@ -51,13 +54,13 @@ module Scaffoldhub
         end
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red
-        nil
+        raise e
       rescue Scaffoldhub::NotFoundException => e
-        say_status :error, "HTTP 404 not found error for #{e.message}", :red
-        nil
+        say_status :error, "HTTP 404 error - did you misspell \"#{scaffold_name}\"?", :red
+        raise e
       rescue Scaffoldhub::NetworkErrorException => e
         say_status :error, "HTTP error connecting to #{e.message}", :red
-        nil
+        raise e
       end
     end
 

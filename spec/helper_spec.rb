@@ -57,7 +57,7 @@ describe Scaffoldhub::Helper do
     it 'should raise an exception if the template file doesn\'t exist' do
       File.expects(:exists?).with('/some/path/src1').returns(false)
       @gen.expects(:say_status).with(:error, 'No such file or directory - /some/path/src1', :red)
-      @gen.copy_files
+      lambda { @gen.copy_files }.should raise_error(Errno::ENOENT)
     end
   end
 
