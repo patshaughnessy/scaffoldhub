@@ -17,6 +17,10 @@ module Scaffoldhub
       end
     end
 
+    def method_missing(sym, *args, &block)
+      system("rails generate scaffoldhub #{args.join(' ')} --scaffold #{sym.to_s}")
+    end
+
     private
 
     def load_spec(scaffold_spec)
