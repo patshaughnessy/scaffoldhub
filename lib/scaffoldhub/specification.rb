@@ -77,9 +77,9 @@ module Scaffoldhub
 
       def adjusted_base_url
         if base_url =~ /github.com\/([^\s]+\/[^\s]+)\/(tree|blob)\/(.*)$/
-          "https://github.com/#{$1}/raw/#{$3}"
+          "https://raw.github.com/#{$1}/#{$3}"
         elsif base_url =~ /github.com\/([^\s^\/]+\/[^\s^\/]+)\/?$/
-          "https://github.com/#{$1}/raw/master"
+          "https://raw.github.com/#{$1}/master"
         else
           base_url
         end
