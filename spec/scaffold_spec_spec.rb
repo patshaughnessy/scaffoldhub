@@ -57,6 +57,12 @@ describe Scaffoldhub::ScaffoldSpec do
         find_spec(subject, :controller, 'templates/controller.rb').should_not be_nil
       end
 
+      it 'should parse the helper file' do
+        helper_spec = find_spec(subject, :helper, 'templates/helper.rb')
+        helper_spec.should_not be_nil
+        helper_spec[:rename].should == 'NAME_helper.rb'
+      end
+
       it 'should parse a view file' do
         find_spec(subject, :view, 'templates/_form.html.erb').should_not be_nil
       end

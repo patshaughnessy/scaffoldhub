@@ -48,7 +48,7 @@ module Scaffoldhub
     @@tags   = []
     @@gems   = []
 
-    define_dsl_file_keyword :model, :migration, :controller, :view, :layout
+    define_dsl_file_keyword :model, :migration, :controller, :view, :layout, :helper
 
     class << self
 

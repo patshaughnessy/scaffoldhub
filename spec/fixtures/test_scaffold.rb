@@ -38,6 +38,8 @@ Scaffoldhub::Specification.new do
   # view file with this path & filename: app/views/PLURAL_NAME/view_file_name.rb
   view 'templates/_form.html.erb'
 
+  helper 'templates/helper.rb', :rename => 'NAME_helper.rb'
+
   gem 'some_gem', '1.0'
   gem "some_other_gem", :group => :test, :git => "git://github.com/rails/rails"
 

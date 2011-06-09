@@ -8,6 +8,12 @@ module ScaffoldController
     remove_hook_for :template_engine
     hook_for        :template_engine, :as => :scaffoldhub
 
+    remove_hook_for :helper
+    # Invoke the helper using the controller name (pluralized)
+    hook_for        :helper, :as => :scaffoldhub do |invoked|
+      invoke invoked, [ controller_name ]
+    end
+
     class_option :scaffold, :default => 'default', :banner => "SCAFFOLD_NAME",  :type => :string,  :desc => "Scaffold to use"
     class_option :local,    :default => false,     :banner => "LOCAL SCAFFOLD", :type => :boolean, :desc => "Use a local scaffold, not scaffoldhub.org"
 
