@@ -18,6 +18,7 @@ module Scaffoldhub
       begin
         scaffold_spec.select_files(type).each do |template_file|
           yield template_file.download!
+          template_file.close
         end
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red
@@ -34,7 +35,10 @@ module Scaffoldhub
     def find_template_file(type)
       begin
         template_file = scaffold_spec.find_file(type)
-        template_file.download! unless template_file.nil?
+        if template_file
+          yield template_file.download!
+          template_file.close
+        end
       rescue Errno::ENOENT => e
         say_status :error, e.message, :red
         raise e

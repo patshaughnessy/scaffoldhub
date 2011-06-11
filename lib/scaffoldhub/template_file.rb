@@ -14,8 +14,12 @@ module Scaffoldhub
       if @local
         File.join(@base_url, @src)
       else
-        @local_path
+        @temp_file.path
       end
+    end
+
+    def close
+      @temp_file.close if @temp_file
     end
 
     def dest
@@ -30,8 +34,8 @@ module Scaffoldhub
       if @local
         raise Errno::ENOENT.new(src) unless File.exists?(src)
       else
-        @local_path = Tempfile.new(File.basename(@src)).path
-        open(@local_path, "wb") do |file|
+        @temp_file = Tempfile.new(File.basename(@src))
+        File.open(@temp_file.path, "wb") do |file|
           file.write(remote_file_contents!)
         end
       end

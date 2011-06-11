@@ -16,14 +16,16 @@ module ActiveRecord
     class_option :parent,     :type => :string, :desc => "The parent class for the generated model"
 
     def create_model_file
-      model_template = find_template_file(:model)
-      template model_template.src, File.join('app/models', class_path, "#{file_name}.rb") if model_template
+      find_template_file(:model) do |model_template|
+        template model_template.src, File.join('app/models', class_path, "#{file_name}.rb")
+      end
     end
 
     def create_migration_file
       return unless options[:migration] && options[:parent].nil?
-      migration_template = find_template_file(:migration)
-      migration_template migration_template.src, "db/migrate/create_#{table_name}.rb" if migration_template
+      find_template_file(:migration) do |migration_template|
+        migration_template migration_template.src, "db/migrate/create_#{table_name}.rb"
+      end
     end
 
   end

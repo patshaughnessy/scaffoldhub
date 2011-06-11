@@ -18,8 +18,9 @@ module ScaffoldController
     class_option :local,    :default => false,     :banner => "LOCAL SCAFFOLD", :type => :boolean, :desc => "Use a local scaffold, not scaffoldhub.org"
 
     def create_controller_files
-      controller_template_file = find_template_file(:controller)
-      template controller_template_file.src, File.join('app/controllers', class_path, "#{controller_file_name}_controller.rb") if controller_template_file
+      find_template_file(:controller) do |controller_template_file|
+        template controller_template_file.src, File.join('app/controllers', class_path, "#{controller_file_name}_controller.rb")
+      end
     end
   end
 end
