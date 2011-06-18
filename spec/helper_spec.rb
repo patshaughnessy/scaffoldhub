@@ -1,6 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 class FakeGenerator
+
+  class << self
+    def source_root(value)
+      @sr = value
+    end
+    def source_root_value
+      @sr
+    end
+  end
+
   include Scaffoldhub::Helper
 
   attr_accessor :files
@@ -156,6 +166,12 @@ describe Scaffoldhub::Helper do
     end
     it 'should replace the SCAFFOLD_PARAMETER token' do
       subject.replace_name_tokens('blah blah SCAFFOLD_PARAMETER blah blah blah').should == 'blah blah some_field blah blah blah'
+    end
+  end
+
+  describe 'calling source root' do
+    it 'should call source_root when included in each generator class' do
+      FakeGenerator.source_root_value.should == Dir.tmpdir
     end
   end
 end

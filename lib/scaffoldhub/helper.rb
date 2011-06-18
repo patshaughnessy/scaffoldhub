@@ -1,7 +1,15 @@
+require 'tmpdir'
+
 module Scaffoldhub
   module Helper
 
     class ScaffoldParameterMissing < RuntimeError
+    end
+
+    def self.included(base)
+      base.class_eval do
+        source_root Dir.tmpdir
+      end
     end
 
     class << self

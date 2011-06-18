@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Pat Shaughnessy']
   s.email       = ['pat@patshaughnessy.net']
-  s.homepage    = "http://scaffoldhub.org"
-  s.summary     = %q{Generate customized Rails scaffolding from scaffoldhub.org}
-  s.description = %q{Run Rails scaffold generator with customized templates downloaded from scaffoldhub.org}
+  s.homepage    = "http://www.scaffoldhub.org"
+  s.summary     = %q{Run a scaffold from www.scaffoldhub.org, or push a new scaffold to www.scaffoldhub.org.}
+  s.description = %q{Run a scaffold from www.scaffoldhub.org, or push a new scaffold to www.scaffoldhub.org.}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
